@@ -476,12 +476,10 @@ input:focus, select:focus, textarea:focus {
 
 <!-- TOP NAV -->
 <nav class="top-nav">
-  <button class="nav-btn active" id="nav-order" onclick="showPage('order')">
+  <button class="nav-btn active" id="nav-order" onclick="showPage('order')" ontouchstart="_tapNav()" oncontextmenu="_tapNav();return false;">
     <i class="ti ti-shopping-bag"></i> Simulasi Order
   </button>
-  <button class="nav-btn" id="nav-admin" onclick="showAdminPage()">
-    <i class="ti ti-settings"></i> Admin
-  </button>
+  <div id="admin-secret" onclick="_tapNav()" style="position:absolute;right:0;top:0;width:20px;height:100%;cursor:default;user-select:none;opacity:0"></div>
 </nav>
 
 <!-- ═══════ ORDER PAGE ═══════ -->
@@ -661,7 +659,6 @@ input:focus, select:focus, textarea:focus {
       <button class="btn-danger" onclick="adminLogout()"><i class="ti ti-logout"></i> Logout admin</button>
     </div>
   </div>
-
 </div><!-- /page-admin -->
 
 
@@ -763,7 +760,8 @@ function showPage(p){
   document.getElementById('page-order').classList.toggle('active',p==='order');
   document.getElementById('page-admin').classList.toggle('active',p==='admin');
   const no=document.getElementById('nav-order'), na=document.getElementById('nav-admin');
-  no.classList.toggle('active',p==='order'); na.classList.toggle('active',p==='admin');
+  if(no) no.classList.toggle('active',p==='order');
+  if(na) na.classList.toggle('active',p==='admin');
 }
 
 function showAdminTab(t){
@@ -1007,14 +1005,22 @@ function resetAll(){if(!confirm('Reset semua data ke default?'))return;db={cats:
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 
-function showAdminPage(){
-  if(sessionStorage.getItem('admin_ok')==='1'){showPage('admin');return;}
-  const m=document.getElementById('auth-modal');
-  m.style.display='flex';
-  document.getElementById('auth-input').value='';
-  document.getElementById('auth-error').style.display='none';
-  setTimeout(()=>document.getElementById('auth-input').focus(),120);
+let _tapCount=0,_tapTimer;
+function _tapNav(){
+  _tapCount++;
+  clearTimeout(_tapTimer);
+  _tapTimer=setTimeout(()=>{_tapCount=0;},2000);
+  if(_tapCount>=5){
+    _tapCount=0;
+    if(sessionStorage.getItem('admin_ok')==='1'){showPage('admin');return;}
+    const m=document.getElementById('auth-modal');
+    m.style.display='flex';
+    document.getElementById('auth-input').value='';
+    document.getElementById('auth-error').style.display='none';
+    setTimeout(()=>document.getElementById('auth-input').focus(),120);
+  }
 }
+function showAdminPage(){_tapNav();}
 function checkAuth(){
   const pass=document.getElementById('auth-input').value;
   const stored=db.settings.adminPass||'Dy_7707';

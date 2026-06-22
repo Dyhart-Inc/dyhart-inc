@@ -21,7 +21,7 @@
 html{background:var(--bg)}
 body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--bg);min-height:100vh}
 .app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);display:flex;flex-direction:column}
-.top-nav{display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm)}
+.top-nav{display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);overflow:hidden}
 .nav-btn{flex:1;padding:14px 8px 12px;border:none;background:transparent;font-family:var(--font);font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;border-bottom:2.5px solid transparent;transition:all .2s}
 .nav-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
 .page{display:none;flex:1}.page.active{display:block}
@@ -132,9 +132,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 
   <button class="nav-btn active" id="nav-customer" onclick="showPage('customer')">
     <i class="ti ti-camera"></i> Pricelist
   </button>
-  <button class="nav-btn" id="nav-admin" onclick="showAdminPage()">
-    <i class="ti ti-settings"></i> Admin
-  </button>
+  <div id="admin-secret" onclick="_tapNav()" style="position:absolute;right:0;top:0;width:20px;height:100%;cursor:default;user-select:none;opacity:0"></div>
 </nav>
 
 <!-- CUSTOMER PAGE -->
@@ -403,7 +401,7 @@ function showPage(p){
   document.getElementById('page-customer').classList.toggle('active',p==='customer');
   document.getElementById('page-admin').classList.toggle('active',p==='admin');
   const nc=document.getElementById('nav-customer'),na=document.getElementById('nav-admin');
-  nc.classList.toggle('active',p==='customer'); na.classList.toggle('active',p==='admin');
+  if(nc) nc.classList.toggle('active',p==='customer'); if(na) na.classList.toggle('active',p==='admin');
 }
 
 function showCTab(t){
@@ -715,14 +713,22 @@ function resetAll(){
 }
 
 
-function showAdminPage(){
-  if(sessionStorage.getItem('admin_ok')==='1'){showPage('admin');return;}
-  const m=document.getElementById('auth-modal');
-  m.style.display='flex';
-  document.getElementById('auth-input').value='';
-  document.getElementById('auth-error').style.display='none';
-  setTimeout(()=>document.getElementById('auth-input').focus(),120);
+let _tapCount=0,_tapTimer;
+function _tapNav(){
+  _tapCount++;
+  clearTimeout(_tapTimer);
+  _tapTimer=setTimeout(()=>{_tapCount=0;},2000);
+  if(_tapCount>=5){
+    _tapCount=0;
+    if(sessionStorage.getItem('admin_ok')==='1'){showPage('admin');return;}
+    const m=document.getElementById('auth-modal');
+    m.style.display='flex';
+    document.getElementById('auth-input').value='';
+    document.getElementById('auth-error').style.display='none';
+    setTimeout(()=>document.getElementById('auth-input').focus(),120);
+  }
 }
+function showAdminPage(){_tapNav();}
 function checkAuth(){
   const pass=document.getElementById('auth-input').value;
   const stored=db.settings.adminPass||'Dy_7707';
