@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Dyhart Jastip — Simulasi Harga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+:root {
+  --bg: #F7F5F2;
+  --surface: #FFFFFF;
+  --surface2: #F0EDE8;
+  --border: #E2DDD8;
+  --border2: #CCC7C0;
+  --text: #1A1714;
+  --text2: #6B6560;
+  --text3: #A09A94;
+  --accent: #C8472B;
+  --accent-light: #FAF0EE;
+  --accent-dark: #9E2E18;
+  --green: #1E7A52;
+  --green-light: #EAF5EE;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 16px rgba(0,0,0,.06);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); }
+
+body {
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+/* ── LAYOUT ── */
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOP NAV ── */
+.top-nav {
+  display: flex;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-btn {
+  flex: 1;
+  padding: 14px 8px 12px;
+  border: none;
+  background: transparent;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-bottom: 2.5px solid transparent;
+  transition: all .2s;
+}
+.nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── PAGES ── */
+.page { display: none; flex: 1; }
+.page.active { display: block; }
+
+/* ── HERO ── */
+.hero {
+  background: var(--accent);
+  padding: 24px 20px 20px;
+  color: #fff;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .75;
+  margin-bottom: 6px;
+}
+.hero-title {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: 4px;
+}
+.hero-sub {
+  font-size: 13px;
+  opacity: .8;
+  line-height: 1.5;
+}
+.kurs-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 12px;
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ── PROGRESS ── */
+.prog-wrap {
+  padding: 16px 20px 0;
+  background: var(--surface);
+}
+.prog-bar { display: flex; gap: 4px; margin-bottom: 10px; }
+.prog-seg {
+  flex: 1; height: 3px; background: var(--border);
+  border-radius: 2px; transition: background .3s;
+}
+.prog-seg.done { background: var(--green); }
+.prog-seg.active { background: var(--accent); }
+.prog-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: 14px;
+}
+.prog-label { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; }
+.prog-step { font-size: 11px; color: var(--text3); }
+
+/* ── STEP CONTAINER ── */
+.step { display: none; }
+.step.active { display: block; }
+.step-body { padding: 20px; }
+
+.step-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+
+/* ── FORM ── */
+.field { margin-bottom: 14px; }
+.field-label { font-size: 12px; font-weight: 600; color: var(--text2); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 6px; display: block; }
+input[type=text], input[type=tel], input[type=number], select, textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface);
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(200,71,43,.1);
+}
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ── CATEGORY GRID ── */
+.cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.cat-card {
+  padding: 14px 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+  text-align: center;
+  transition: all .18s;
+  box-shadow: var(--shadow-sm);
+}
+.cat-card:hover { border-color: var(--border2); transform: translateY(-1px); box-shadow: var(--shadow); }
+.cat-card.sel { border-color: var(--accent); background: var(--accent-light); }
+.cat-card .cat-icon { font-size: 22px; display: block; margin-bottom: 6px; }
+.cat-card .cat-name { font-size: 12px; font-weight: 600; line-height: 1.35; color: var(--text); }
+.cat-card.sel .cat-name { color: var(--accent); }
+
+/* ── SEARCH ── */
+.search-wrap { position: relative; margin-bottom: 14px; }
+.search-wrap input { padding-left: 40px; }
+.search-ico { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 17px; pointer-events: none; }
+
+/* ── PRODUCT LIST ── */
+.prod-scroll { max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; padding-right: 2px; }
+.prod-scroll::-webkit-scrollbar { width: 4px; }
+.prod-scroll::-webkit-scrollbar-track { background: var(--surface2); border-radius: 2px; }
+.prod-scroll::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.prod-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all .15s;
+}
+.prod-row:hover { border-color: var(--border2); }
+.prod-row.added { border-color: var(--green); background: var(--green-light); }
+.prod-info { flex: 1; min-width: 0; }
+.prod-name { font-size: 13px; font-weight: 500; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prod-price { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.add-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1.5px solid var(--border2);
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; transition: all .15s;
+  font-size: 15px; color: var(--text2);
+}
+.add-btn:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+.add-btn.added { background: var(--green); border-color: var(--green); color: #fff; }
+.add-btn.added:hover { background: #155c3d; }
+
+/* ── CART ── */
+.cart-empty { text-align: center; padding: 40px 20px; color: var(--text3); }
+.cart-empty i { font-size: 40px; display: block; margin-bottom: 10px; opacity: .4; }
+
+.cart-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-sm);
+}
+.cart-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; margin-bottom: 6px; }
+.cart-name { font-size: 13px; font-weight: 600; line-height: 1.4; margin-bottom: 4px; }
+.cart-unit { font-size: 12px; color: var(--text2); margin-bottom: 12px; }
+.cart-footer { display: flex; align-items: center; justify-content: space-between; }
+.qty-ctrl { display: flex; align-items: center; gap: 8px; }
+.qty-btn {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px solid var(--border2);
+  background: var(--surface);
+  cursor: pointer; font-size: 17px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text); transition: all .15s;
+}
+.qty-btn:hover { border-color: var(--accent); color: var(--accent); }
+.qty-val { font-size: 15px; font-weight: 700; min-width: 22px; text-align: center; }
+.subtotal-label { font-size: 11px; color: var(--text3); text-align: right; }
+.subtotal-val { font-size: 15px; font-weight: 700; text-align: right; }
+.del-btn {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px solid #EECDC8;
+  background: #FDF5F4;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  color: var(--accent); font-size: 14px; transition: all .15s;
+}
+.del-btn:hover { background: var(--accent); color: #fff; }
+
+/* ── SUMMARY ── */
+.summary-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+}
+.order-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.order-row:last-child { border-bottom: none; }
+.sum-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; font-size: 13px; }
+.sum-row.total { border-top: 1.5px solid var(--border); padding-top: 12px; margin-top: 4px; font-size: 15px; font-weight: 700; }
+
+.grand-box {
+  background: var(--green);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(30,122,82,.25);
+}
+.grand-label { font-size: 12px; font-weight: 600; color: rgba(255,255,255,.8); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
+.grand-amount { font-size: 30px; font-weight: 700; color: #fff; }
+
+.notice { font-size: 12px; color: var(--text3); text-align: center; line-height: 1.6; margin-top: 4px; }
+
+/* ── BUTTONS ── */
+.nav-btns { display: flex; gap: 10px; margin-top: 16px; }
+.btn-back {
+  flex: 1; padding: 12px;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text); cursor: pointer; transition: all .15s;
+}
+.btn-back:hover { border-color: var(--text); }
+.btn-next {
+  flex: 2; padding: 12px;
+  border: none; border-radius: var(--radius-sm);
+  background: var(--accent);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  color: #fff; cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-next:hover { background: var(--accent-dark); }
+.btn-wa {
+  flex: 2; padding: 12px;
+  border: none; border-radius: var(--radius-sm);
+  background: #25D366;
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  color: #fff; cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-wa:hover { background: #1da851; }
+.btn-full {
+  width: 100%; padding: 12px;
+  border: none; border-radius: var(--radius-sm);
+  background: var(--accent);
+  font-family: var(--font); font-size: 14px; font-weight: 600;
+  color: #fff; cursor: pointer; transition: all .15s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-top: 8px;
+}
+.btn-full:hover { background: var(--accent-dark); }
+.btn-outline {
+  width: 100%; padding: 12px;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--text); cursor: pointer; margin-top: 8px;
+}
+.btn-danger {
+  width: 100%; padding: 12px;
+  border: 1.5px solid #EECDC8;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-family: var(--font); font-size: 14px; font-weight: 500;
+  color: var(--accent); cursor: pointer; margin-top: 8px;
+}
+
+/* ── ADMIN ── */
+.admin-hero {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 20px 0;
+}
+.admin-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.admin-sub { font-size: 13px; color: var(--text2); margin-bottom: 16px; }
+.tab-bar { display: flex; border-bottom: 1px solid var(--border); }
+.tab {
+  flex: 1; padding: 11px 4px 10px;
+  border: none; background: transparent;
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  color: var(--text3); cursor: pointer;
+  border-bottom: 2.5px solid transparent;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  transition: all .2s;
+}
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.admin-body { padding: 20px; }
+.section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.section-title { font-size: 15px; font-weight: 700; }
+.btn-add {
+  display: flex; align-items: center; gap: 5px;
+  padding: 8px 14px;
+  border: none; border-radius: var(--radius-sm);
+  background: var(--accent);
+  font-family: var(--font); font-size: 13px; font-weight: 600;
+  color: #fff; cursor: pointer;
+}
+
+.filter-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 20px;
+  border: 1.5px solid var(--border2);
+  background: var(--surface);
+  font-size: 12px; font-weight: 500; color: var(--text2);
+  cursor: pointer; transition: all .15s;
+}
+.pill.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent); }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+.cat-section-label {
+  font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--text3);
+  padding: 10px 0 6px; border-bottom: 1px solid var(--border);
+  margin-bottom: 8px; display: flex; justify-content: space-between;
+}
+
+.admin-prod-row { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.admin-prod-row:last-child { border-bottom: none; }
+.admin-prod-info { flex: 1; min-width: 0; }
+.admin-prod-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-prod-price { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.icon-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1.5px solid var(--border2);
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; color: var(--text2); font-size: 14px;
+  transition: all .15s;
+}
+.icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+.icon-btn.del:hover { border-color: var(--accent); background: var(--accent); color: #fff; }
+
+.form-divider { border-top: 1.5px solid var(--border); padding-top: 16px; margin-top: 8px; }
+.form-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+
+.cat-card-admin {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: var(--shadow-sm);
+}
+.cat-icon-box {
+  width: 42px; height: 42px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 20px;
+}
+.cat-admin-info { flex: 1; }
+.cat-admin-name { font-size: 14px; font-weight: 600; }
+.cat-admin-count { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+.settings-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+.settings-label { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; display: block; }
+.settings-row { margin-bottom: 14px; }
+.reset-section { background: var(--surface2); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 16px; margin-top: 14px; }
+.reset-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.reset-desc { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 12px; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--text); color: #fff;
+  padding: 10px 20px; border-radius: 24px;
+  font-size: 13px; font-weight: 500;
+  opacity: 0; transition: opacity .25s; pointer-events: none; z-index: 999;
+  white-space: nowrap; box-shadow: var(--shadow);
+}
+.toast.show { opacity: 1; }
+
+/* ── EMPTY ── */
+.empty { text-align: center; padding: 40px 20px; color: var(--text3); }
+.empty i { font-size: 36px; display: block; margin-bottom: 8px; opacity: .35; }
+.empty p { font-size: 13px; }
+
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div id="toast" class="toast"></div>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <button class="nav-btn active" id="nav-order" onclick="showPage('order')">
+    <i class="ti ti-shopping-bag"></i> Simulasi Order
+  </button>
+  <button class="nav-btn" id="nav-admin" onclick="showAdminPage()">
+    <i class="ti ti-settings"></i> Admin
+  </button>
+</nav>
+
+<!-- ═══════ ORDER PAGE ═══════ -->
+<div class="page active" id="page-order">
+
+  <!-- Hero -->
+  <div class="hero" id="hero-section"><button class="home-link" onclick="window.location.href='index.html'" style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(255,255,255,.3);border-radius:20px;color:rgba(255,255,255,.85);font-size:12px;font-weight:500;background:transparent;font-family:var(--font);cursor:pointer;margin-bottom:12px"><i class="ti ti-arrow-left"></i> Kembali</button>
+    <div class="hero-eyebrow" id="hero-eyebrow">Dyhart Jastip</div>
+    <div class="hero-title" id="hero-title">Simulasi Harga<br>Belanja Korea 🇰🇷</div>
+    <div class="hero-sub" id="hero-sub">Pilih produk, lihat total — sebelum order ke admin.</div>
+    <div class="kurs-chip">
+      <i class="ti ti-currency-won"></i>
+      1 ₩ = Rp <span id="kurs-disp">-</span>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="prog-wrap">
+    <div class="prog-bar">
+      <div class="prog-seg active" id="ps0"></div>
+      <div class="prog-seg" id="ps1"></div>
+      <div class="prog-seg" id="ps2"></div>
+      <div class="prog-seg" id="ps3"></div>
+    </div>
+    <div class="prog-meta">
+      <span class="prog-label" id="prog-label">Info pemesan</span>
+      <span class="prog-step" id="prog-step">1 / 4</span>
+    </div>
+  </div>
+
+  <!-- STEP 0: Info -->
+  <div class="step active" id="s0">
+    <div class="step-body">
+      <div class="step-title">Siapa kamu?</div>
+      <div class="field"><label class="field-label">Nama lengkap</label><input type="text" id="nama" placeholder="Masukkan namamu"></div>
+      <div class="field"><label class="field-label">Nomor WhatsApp</label><input type="tel" id="wa" placeholder="+62 812 3456 7890"></div>
+      <div class="nav-btns">
+        <button class="btn-next" onclick="goStep(1)">Pilih produk <i class="ti ti-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1: Produk -->
+  <div class="step" id="s1">
+    <div class="step-body">
+      <div class="step-title">Pilih produk</div>
+      <div class="cat-grid" id="cat-grid"></div>
+      <div id="prod-section" style="display:none">
+        <div class="search-wrap">
+          <i class="ti ti-search search-ico"></i>
+          <input type="text" id="search" placeholder="Cari produk di kategori ini..." oninput="renderProds()">
+        </div>
+        <div class="prod-scroll" id="prod-list"></div>
+      </div>
+      <div class="nav-btns">
+        <button class="btn-back" onclick="goStep(0)"><i class="ti ti-arrow-left"></i></button>
+        <button class="btn-next" id="btn-cart" onclick="goStep(2)">Keranjang <i class="ti ti-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Keranjang -->
+  <div class="step" id="s2">
+    <div class="step-body">
+      <div class="step-title">Atur jumlah</div>
+      <div id="cart-list"></div>
+      <div class="nav-btns">
+        <button class="btn-back" onclick="goStep(1)"><i class="ti ti-arrow-left"></i></button>
+        <button class="btn-next" onclick="goStep(3)">Hitung total <i class="ti ti-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Summary -->
+  <div class="step" id="s3">
+    <div class="step-body">
+      <div class="step-title">Estimasi total</div>
+      <div id="summary-content"></div>
+      <p class="notice">* Estimasi. Kurs saat transaksi mungkin berbeda.<br>Biaya ongkir belum termasuk.</p>
+      <div class="nav-btns" style="margin-top:14px">
+        <button class="btn-back" onclick="goStep(2)"><i class="ti ti-arrow-left"></i></button>
+        <button class="btn-wa" onclick="sendToWA()"><i class="ti ti-brand-whatsapp"></i> Kirim ke admin</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-order -->
+
+<!-- ═══════ ADMIN PAGE ═══════ -->
+<div class="page" id="page-admin">
+  <div class="admin-hero">
+    <div class="admin-title">Panel Admin</div>
+    <div class="admin-sub">Kelola produk, kategori, dan pengaturan.</div>
+    <div class="tab-bar">
+      <button class="tab active" id="atab-products" onclick="showAdminTab('products')"><i class="ti ti-package"></i> Produk</button>
+      <button class="tab" id="atab-categories" onclick="showAdminTab('categories')"><i class="ti ti-tag"></i> Kategori</button>
+      <button class="tab" id="atab-settings" onclick="showAdminTab('settings')"><i class="ti ti-adjustments"></i> Pengaturan</button>
+    </div>
+  </div>
+
+  <!-- ADMIN: Products -->
+  <div id="apanel-products" class="admin-body">
+    <div class="section-head">
+      <span class="section-title">Daftar Produk</span>
+      <button class="btn-add" onclick="openAddProd()"><i class="ti ti-plus"></i> Tambah</button>
+    </div>
+    <div class="filter-pills" id="admin-filter"></div>
+    <div id="admin-prod-list"></div>
+    <div id="prod-form-wrap" style="display:none">
+      <div class="form-divider">
+        <div class="form-title" id="prod-form-title">Tambah Produk</div>
+        <div class="field"><label class="field-label">Nama produk</label><input type="text" id="pf-name" placeholder="Nama produk"></div>
+        <div class="grid2" style="gap:10px;margin-bottom:14px">
+          <div><label class="field-label">Harga (₩ Won)</label><input type="number" id="pf-won" placeholder="15000"></div>
+          <div><label class="field-label">Kategori</label><select id="pf-cat"></select></div>
+        </div>
+        <div class="nav-btns">
+          <button class="btn-back" onclick="closeProdForm()">Batal</button>
+          <button class="btn-next" onclick="saveProd()"><i class="ti ti-check"></i> Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN: Categories -->
+  <div id="apanel-categories" class="admin-body" style="display:none">
+    <div class="section-head">
+      <span class="section-title">Kategori</span>
+      <button class="btn-add" onclick="openAddCat()"><i class="ti ti-plus"></i> Tambah</button>
+    </div>
+    <div id="admin-cat-list"></div>
+    <div id="cat-form-wrap" style="display:none">
+      <div class="form-divider">
+        <div class="form-title" id="cat-form-title">Tambah Kategori</div>
+        <div class="field"><label class="field-label">Nama (dengan emoji)</label><input type="text" id="cf-name" placeholder="💊 Pharmacy"></div>
+        <div class="grid2" style="gap:10px;margin-bottom:14px">
+          <div><label class="field-label">Warna latar (hex)</label><input type="text" id="cf-bg" placeholder="#D9E1F2"></div>
+          <div><label class="field-label">Warna teks (hex)</label><input type="text" id="cf-tc" placeholder="#1F3864"></div>
+        </div>
+        <div class="field"><label class="field-label">Icon (tabler icon)</label><input type="text" id="cf-icon" placeholder="ti-pill — lihat tabler-icons.io"></div>
+        <div class="grid2" style="gap:10px;margin-bottom:6px">
+          <div><label class="field-label">Tipe biaya jasa</label><select id="cf-feetype" onchange="onFeeTypeChange()"><option value="flat">Nominal (Rp)</option><option value="percent">Persentase (%)</option></select></div>
+          <div><label class="field-label" id="cf-feevalue-label">Nilai (Rp)</label><input type="number" id="cf-feevalue" placeholder="15000"></div>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:14px;line-height:1.5">Persentase cocok untuk kategori bernilai tinggi (skincare, fashion). Nominal tetap cocok untuk kategori bernilai rendah (snack, household).</div>
+        <div class="nav-btns">
+          <button class="btn-back" onclick="closeCatForm()">Batal</button>
+          <button class="btn-next" onclick="saveCat()"><i class="ti ti-check"></i> Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN: Settings -->
+  <div id="apanel-settings" class="admin-body" style="display:none">
+    <div class="settings-card">
+      <div class="settings-row"><label class="settings-label">Nama layanan (eyebrow kecil)</label><input type="text" id="set-biz" placeholder="Dyhart Jastip"></div>
+      <div class="settings-row"><label class="settings-label">Judul halaman (headline besar)</label><input type="text" id="set-hero" placeholder="Simulasi Harga Belanja Korea 🇰🇷"></div>
+      <div class="settings-row"><label class="settings-label">Deskripsi singkat (sub judul)</label><input type="text" id="set-tagline" placeholder="Pilih produk, lihat total..."></div>
+      <div class="settings-row"><label class="settings-label">Kurs KRW → IDR (Rp per 1 ₩)</label><input type="number" id="set-kurs" step="0.01" placeholder="11.77"></div>
+      <div class="settings-row"><label class="settings-label">Biaya jasa default (kategori baru)</label><input type="number" id="set-jasa" placeholder="15000"><div style="font-size:11px;color:var(--text3);margin-top:5px;line-height:1.5">Nilai awal saat menambah kategori baru. Atur biaya jasa per kategori secara individual di tab Kategori.</div></div>
+      <div class="settings-row"><label class="settings-label">Batas maks. qty per item</label><input type="number" id="set-maxqty" placeholder="5"></div>
+      <div class="settings-row"><label class="settings-label">Nomor WA admin (tanpa +, contoh: 6281234...)</label><input type="text" id="set-admin-wa" placeholder="628123456789"></div>
+      
+      <div class="settings-row"><label class="settings-label">URL Foto Banner</label><input type="text" id="set-banner" placeholder="https://... (kosongkan untuk warna solid)"><div style="font-size:11px;color:var(--text3);margin-top:5px;line-height:1.5">Ukuran ideal: 1200×400px. Gunakan link langsung (Google Drive, Imgur, dll.)</div></div>
+      <div class="settings-row"><label class="settings-label">Ganti password admin</label><input type="password" id="set-pass" placeholder="Kosongkan jika tidak diubah"></div>
+<button class="btn-full" onclick="saveSettings()"><i class="ti ti-check"></i> Simpan pengaturan</button>
+    </div>
+    <div class="reset-section">
+      <div class="reset-title">Reset data</div>
+      <div class="reset-desc">Menghapus semua produk & kategori yang ditambahkan dan mengembalikan ke data bawaan.</div>
+      <button class="btn-danger" onclick="resetAll()"><i class="ti ti-refresh"></i> Reset ke data default</button>
+    </div>
+  </div>
+
+</div><!-- /page-admin -->
+
+
+  <!-- AUTH MODAL -->
+  <div id="auth-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(3px)">
+    <div style="background:var(--surface);border-radius:var(--radius);padding:28px 24px;width:88%;max-width:340px;box-shadow:var(--shadow)">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--accent-light);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+          <i class="ti ti-lock" style="font-size:26px;color:var(--accent)"></i>
+        </div>
+        <div style="font-size:17px;font-weight:700;margin-bottom:4px">Admin Access</div>
+        <div style="font-size:13px;color:var(--text2)">Masukkan password untuk lanjut</div>
+      </div>
+      <input type="password" id="auth-input" placeholder="Password" style="margin-bottom:10px;text-align:center;font-size:18px;letter-spacing:.15em" onkeydown="if(event.key==='Enter')checkAuth()">
+      <div id="auth-error" style="display:none;font-size:12px;color:#DC2626;text-align:center;margin-bottom:10px;font-weight:500">Password salah. Coba lagi.</div>
+      <button onclick="checkAuth()" style="width:100%;padding:12px;border:none;border-radius:var(--radius-sm);background:var(--accent);font-family:var(--font);font-size:14px;font-weight:600;color:#fff;cursor:pointer;margin-bottom:8px">Masuk</button>
+      <button onclick="closeAuth()" style="width:100%;padding:12px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);font-family:var(--font);font-size:14px;font-weight:500;color:var(--text);cursor:pointer">Batal</button>
+    </div>
+  </div>
+</div><!-- /app -->
+
+<script>
+// ── DEFAULT DATA ──────────────────────────────────────────────────────────────
+const DEFAULT_CATS = {
+  "💊 Pharmacy":             {icon:"ti-pill",            bg:"#D9E1F2", tc:"#1F3864", feeType:"percent", feeValue:10},
+  "🧴 Skincare":             {icon:"ti-droplet",         bg:"#E2EFDA", tc:"#375623", feeType:"percent", feeValue:8},
+  "💄 Make Up":              {icon:"ti-lipstick",        bg:"#FCE4D6", tc:"#843C0C", feeType:"percent", feeValue:10},
+  "🍜 Snack & Food":         {icon:"ti-bowl-chopsticks", bg:"#FFF2CC", tc:"#7F6000", feeType:"flat", feeValue:15000},
+  "👗 Fashion & Accessories":{icon:"ti-hanger",          bg:"#F4E1F4", tc:"#5B2C6F", feeType:"percent", feeValue:8},
+  "🏠 Household & Living":   {icon:"ti-home-2",          bg:"#DDEBF7", tc:"#1A5276", feeType:"flat", feeValue:15000},
+};
+const DEFAULT_PRODS = {
+  "💊 Pharmacy":[["Omron Pain Reliever Patch (20pcs)",18000],["Bacchus-D Energy Drink (10pcs)",8500],["Lemona Vitamin C Powder (60 sachets)",15000],["Korea Red Ginseng Extract Everytime (30pcs)",45000],["Alvita Collagen Drink (10 bottles)",35000],["Kwang Dong Kyeong-Ok-Go 500ml",55000],["Seoul Milk Calcium Supplement (120tabs)",18000]],
+  "🧴 Skincare":[["Innisfree Green Tea Seed Serum 80ml",38000],["Laneige Lip Sleeping Mask 20g",22000],["COSRX Snail Mucin 96% Essence 100ml",18500],["Some By Mi AHA BHA PHA Toner 150ml",16000],["Sulwhasoo Concentrated Ginseng Serum 60ml",290000],["Mediheal N.M.F Ampoule Mask (10pcs)",25000],["Anessa Perfect UV Sunscreen SPF50+ 60ml",38000],["Dr.Jart+ Cicapair Tiger Grass Cream 50ml",55000],["Beauty of Joseon Glow Serum 30ml",19000],["Torriden DIVE-IN Hyaluronic Serum 50ml",22000],["I'm From Rice Toner 150ml",25000],["Round Lab Birch Juice Toner 350ml",23000],["Klairs Supple Preparation Toner 180ml",26000],["Etude SoonJung Toner 180ml",15000],["Missha Time Revolution Essence 150ml",29000],["Nature Republic Aloe Vera Gel 300ml",7500]],
+  "💄 Make Up":[["Hera Black Cushion 15g",65000],["Rom&nd Juicy Lasting Tint",11000],["Peripera Ink Velvet Lip Tint",9500],["3CE Velvet Lip Tint",17000],["Etude Bling Bling Eye Jewel Liner",12000],["Clio Kill Cover Founwear Cushion 15g",38000],["Romand Zero Velvet Tint",12000],["Missha M Perfect Cover BB Cream 50ml",14000]],
+  "🍜 Snack & Food":[["Samyang Buldak Ramen Original",1800],["Samyang Buldak Ramen Carbo",1800],["Nongshim Shin Ramyun",1500],["Lotte Pepero Choco (box)",2500],["Orion Choco Pie (12pcs box)",6500],["Binggrae Banana Milk 240ml",1500],["Maxim Mocha Gold Coffee Mix (100s)",18000],["Dongsuh French Cafe Latte (100s)",22000],["Ottogi Cheese Ramen",1600],["Crown Turtle Chips",2000]],
+  "👗 Fashion & Accessories":[["Ader Error Basic Logo Tee",120000],["Matin Kim Logo Hoodie",180000],["Andersson Bell Signature Socks",18000],["MLB NY Yankees Cap",55000],["Gentle Monster Sunglasses",350000],["Musinsa Standard Jogger Pants",49000],["Descente Running Shorts",65000],["Tamburins Perfume",85000]],
+  "🏠 Household & Living":[["Daiso Korea Silicon Kitchen Mold Set",5000],["Lock&Lock Air-Tight Container Set (3pcs)",25000],["Mise en Scene Hair Essence 80ml",18000],["Ryoe Korean Herbal Shampoo 400ml",22000],["Lg Perioe Bamboo Salt Toothpaste 160g",9000],["Olive Young Hinoki Bath Salt 300g",15000],["Kakao Friends Stationery Set",18000],["Amos Professional Hair Color (box)",18000]],
+};
+const DEFAULT_SETTINGS = {kurs:11.77, jasa:15000, maxqty:5, adminWa:"", adminPass:"Dy_7707", bannerUrl:"", businessName:"Dyhart Jastip", heroTitle:"Simulasi Harga Belanja Korea 🇰🇷", tagline:"Pilih produk, lihat total — sebelum order ke admin."};
+const STEP_LABELS = ["Info pemesan","Pilih produk","Atur jumlah","Estimasi total"];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let db = {cats:{}, prods:{}, settings:{...DEFAULT_SETTINGS}};
+let selCat=null, cart={}, curStep=0, adminCatFilter=null, editProdKey=null, editCatKey=null;
+
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+function loadDB(){
+  try{
+    const raw=localStorage.getItem('jastip_db');
+    if(raw) db=JSON.parse(raw);
+    else{ db={cats:{...DEFAULT_CATS},prods:JSON.parse(JSON.stringify(DEFAULT_PRODS)),settings:{...DEFAULT_SETTINGS}};saveDB();}
+  }catch(e){db={cats:{...DEFAULT_CATS},prods:JSON.parse(JSON.stringify(DEFAULT_PRODS)),settings:{...DEFAULT_SETTINGS}};}
+  migrateCats();
+  initUI();
+}
+function saveDB(){ try{localStorage.setItem('jastip_db',JSON.stringify(db));}catch(e){} }
+
+// Backward-compat: older saved data has no per-category fee config.
+// Fill it in from the (old) global jasa setting so nothing breaks.
+function migrateCats(){
+  const fallback = db.settings.jasa || 15000;
+  let changed=false;
+  Object.keys(db.cats).forEach(name=>{
+    if(db.cats[name].feeType===undefined){
+      db.cats[name].feeType='flat';
+      db.cats[name].feeValue=fallback;
+      changed=true;
+    }
+  });
+  if(changed) saveDB();
+}
+
+// Fee for one unit × qty, based on the item's category settings.
+// feeType 'percent' -> % of the Rupiah price; 'flat' -> fixed Rp per item.
+function calcFee(cat, rp, qty){
+  const c=db.cats[cat];
+  if(!c || c.feeType===undefined) return (db.settings.jasa||15000)*qty;
+  if(c.feeType==='percent') return Math.round(rp*(c.feeValue/100))*qty;
+  return (c.feeValue||0)*qty;
+}
+
+// ── UI INIT ───────────────────────────────────────────────────────────────────
+function initUI(){
+  document.getElementById('kurs-disp').textContent=db.settings.kurs.toLocaleString('id-ID',{minimumFractionDigits:2});
+  buildCatGrid(); renderAdminProds(); renderAdminCats(); loadSettingsForm();
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+function fmt(n){return Math.round(n).toLocaleString('id-ID')}
+function fmtW(n){return Math.round(n).toLocaleString('ko-KR')}
+
+// ── PAGE NAV ──────────────────────────────────────────────────────────────────
+function showPage(p){
+  document.getElementById('page-order').classList.toggle('active',p==='order');
+  document.getElementById('page-admin').classList.toggle('active',p==='admin');
+  const no=document.getElementById('nav-order'), na=document.getElementById('nav-admin');
+  no.classList.toggle('active',p==='order'); na.classList.toggle('active',p==='admin');
+}
+
+function showAdminTab(t){
+  ['products','categories','settings'].forEach(id=>{
+    document.getElementById('apanel-'+id).style.display=id===t?'block':'none';
+    document.getElementById('atab-'+id).classList.toggle('active',id===t);
+  });
+}
+
+// ── STEP NAV ──────────────────────────────────────────────────────────────────
+function goStep(n){
+  if(n===2&&Object.keys(cart).length===0){toast('Pilih minimal 1 produk dulu!');return;}
+  document.getElementById('s'+curStep).classList.remove('active');
+  curStep=n;
+  document.getElementById('s'+curStep).classList.add('active');
+  for(let i=0;i<4;i++){
+    const s=document.getElementById('ps'+i);
+    s.className='prog-seg'+(i<n?' done':i===n?' active':'');
+  }
+  document.getElementById('prog-label').textContent=STEP_LABELS[n];
+  document.getElementById('prog-step').textContent=(n+1)+' / 4';
+  if(n===2) renderCart();
+  if(n===3) renderSummary();
+}
+
+// ── CAT GRID ──────────────────────────────────────────────────────────────────
+function buildCatGrid(){
+  const g=document.getElementById('cat-grid'); if(!g) return;
+  g.innerHTML='';
+  Object.entries(db.cats).forEach(([name,c])=>{
+    if(!(db.prods[name]||[]).length) return;
+    const b=document.createElement('button');
+    b.className='cat-card'+(selCat===name?' sel':'');
+    b.innerHTML=`<i class="ti ${c.icon} cat-icon"></i><span class="cat-name">${name}</span>`;
+    b.onclick=()=>{selCat=name;buildCatGrid();document.getElementById('prod-section').style.display='block';document.getElementById('search').value='';renderProds();};
+    g.appendChild(b);
+  });
+}
+
+// ── PRODUCT LIST ──────────────────────────────────────────────────────────────
+function renderProds(){
+  const q=(document.getElementById('search').value||'').toLowerCase();
+  const list=document.getElementById('prod-list'); list.innerHTML='';
+  if(!selCat) return;
+  const prods=(db.prods[selCat]||[]).filter(p=>p[0].toLowerCase().includes(q));
+  if(!prods.length){list.innerHTML='<div class="empty"><p>Produk tidak ditemukan</p></div>';return;}
+  const {bg,tc}=db.cats[selCat]||{bg:'#eee',tc:'#333'};
+  prods.forEach(([name,won])=>{
+    const key=selCat+'::'+name, inCart=!!cart[key], rp=Math.round(won*db.settings.kurs);
+    const div=document.createElement('div'); div.className='prod-row'+(inCart?' added':'');
+    div.innerHTML=`<div class="prod-info"><div class="prod-name">${name}</div><div class="prod-price">₩${fmtW(won)} · Rp ${fmt(rp)}</div></div>
+    <button class="add-btn${inCart?' added':''}" onclick="toggleCart('${key}','${selCat}','${name.replace(/'/g,"\\'").replace(/"/g,'&quot;')}',${won})" aria-label="${inCart?'Hapus':'Tambah'}">
+      <i class="ti ${inCart?'ti-check':'ti-plus'}"></i></button>`;
+    list.appendChild(div);
+  });
+}
+
+function toggleCart(key,cat,name,won){
+  if(cart[key]) delete cart[key]; else cart[key]={cat,name,won,qty:1};
+  renderProds();
+  const n=Object.keys(cart).length;
+  document.getElementById('btn-cart').innerHTML=n>0?`Keranjang (${n}) <i class="ti ti-arrow-right"></i>`:`Keranjang <i class="ti ti-arrow-right"></i>`;
+}
+
+// ── CART ──────────────────────────────────────────────────────────────────────
+function renderCart(){
+  const div=document.getElementById('cart-list'); const keys=Object.keys(cart);
+  if(!keys.length){div.innerHTML='<div class="cart-empty"><i class="ti ti-shopping-cart"></i><p>Keranjang masih kosong</p></div>';return;}
+  div.innerHTML='';
+  keys.forEach(key=>{
+    const {cat,name,won,qty}=cart[key];
+    const {bg,tc}=db.cats[cat]||{bg:'#eee',tc:'#333'};
+    const rp=Math.round(won*db.settings.kurs);
+    const card=document.createElement('div'); card.className='cart-card';
+    card.innerHTML=`<span class="cart-badge" style="background:${bg};color:${tc}">${cat}</span>
+    <div class="cart-name">${name}</div>
+    <div class="cart-unit">₩${fmtW(won)} · Rp ${fmt(rp)} / pcs</div>
+    <div class="cart-footer">
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty('${key}',-1)">−</button>
+        <span class="qty-val">${qty}</span>
+        <button class="qty-btn" onclick="changeQty('${key}',1)">+</button>
+      </div>
+      <div><div class="subtotal-label">Subtotal</div><div class="subtotal-val">Rp ${fmt(rp*qty)}</div></div>
+      <button class="del-btn" onclick="removeCart('${key}')"><i class="ti ti-trash"></i></button>
+    </div>`;
+    div.appendChild(card);
+  });
+}
+function changeQty(key,d){
+  if(!cart[key]) return;
+  const nq=cart[key].qty+d;
+  if(nq<1||nq>db.settings.maxqty){if(nq>db.settings.maxqty)toast(`Maks. ${db.settings.maxqty} pcs/item`);return;}
+  cart[key].qty=nq; renderCart();
+}
+function removeCart(key){delete cart[key]; renderCart();}
+
+// ── SUMMARY ───────────────────────────────────────────────────────────────────
+function renderSummary(){
+  const nama=document.getElementById('nama').value||'—', wa=document.getElementById('wa').value||'—';
+  const keys=Object.keys(cart); let tWon=0,tRp=0,tJasa=0,tBayar=0,itemsHtml='';
+  keys.forEach(key=>{
+    const {cat,name,won,qty}=cart[key];
+    const c=db.cats[cat]||{bg:'#eee',tc:'#333'};
+    const {bg,tc}=c;
+    const rp=Math.round(won*db.settings.kurs), jasa=calcFee(cat,rp,qty), bayar=rp*qty+jasa;
+    const feeNote=c.feeType==='percent'?` (${c.feeValue}%)`:'';
+    tWon+=won*qty; tRp+=rp*qty; tJasa+=jasa; tBayar+=bayar;
+    itemsHtml+=`<div class="order-row">
+      <div style="flex:1"><span class="cart-badge" style="background:${bg};color:${tc}">${cat}</span>
+        <div style="font-size:13px;font-weight:500;margin:2px 0;line-height:1.4">${name}</div>
+        <div style="font-size:12px;color:var(--text2)">Qty: ${qty} · ₩${fmtW(won)} × ${qty}</div></div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-size:13px;font-weight:600">Rp ${fmt(rp*qty)}</div>
+        <div style="font-size:11px;color:var(--text3)">+ jasa Rp ${fmt(jasa)}${feeNote}</div></div></div>`;
+  });
+  document.getElementById('summary-content').innerHTML=`
+    <div class="summary-card" style="margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <i class="ti ti-user-circle" style="font-size:24px;color:var(--text3)"></i>
+        <div><div style="font-weight:700;font-size:14px">${nama}</div>
+          <div style="font-size:12px;color:var(--text2)">${wa}</div></div></div>
+      <div style="font-size:12px;color:var(--text3);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+        Kurs: 1 ₩ = Rp ${db.settings.kurs.toLocaleString('id-ID',{minimumFractionDigits:2})} · Biaya jasa mengikuti kategori masing-masing produk</div></div>
+    <div class="summary-card">
+      <div style="font-size:12px;font-weight:700;color:var(--text3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px">${keys.length} jenis produk</div>
+      ${itemsHtml}
+      <div class="sum-row" style="margin-top:8px"><span>Subtotal produk</span><span>Rp ${fmt(tRp)}</span></div>
+      <div class="sum-row"><span style="color:var(--text2)">Total dalam Won</span><span style="color:var(--text2)">₩ ${fmtW(tWon)}</span></div>
+      <div class="sum-row"><span>Biaya jasa</span><span>Rp ${fmt(tJasa)}</span></div>
+      <div class="sum-row total"><span>Total estimasi</span><span style="color:var(--green)">Rp ${fmt(tBayar)}</span></div>
+    </div>
+    <div class="grand-box"><div class="grand-label">Total yang harus dibayar</div><div class="grand-amount">Rp ${fmt(tBayar)}</div></div>`;
+}
+
+function sendToWA(){
+  const nama=document.getElementById('nama').value||'—', wa=document.getElementById('wa').value||'';
+  let msg=`Halo Admin ${db.settings.businessName||'Dyhart Jastip'}! 🇰🇷\n\n*Nama:* ${nama}\n*WA:* ${wa}\n\n*Order:*\n`;
+  let total=0;
+  Object.values(cart).forEach(({cat,name,won,qty})=>{
+    const rp=Math.round(won*db.settings.kurs), sub=rp*qty+calcFee(cat,rp,qty);
+    total+=sub;
+    msg+=`• ${name} (${qty}x) → Rp ${Math.round(sub).toLocaleString('id-ID')}\n`;
+  });
+  msg+=`\n*Total Estimasi: Rp ${Math.round(total).toLocaleString('id-ID')}*\n_(belum termasuk ongkir)_`;
+  const num=db.settings.adminWa||'';
+  const url=num?`https://wa.me/${num}?text=${encodeURIComponent(msg)}`:`https://wa.me/?text=${encodeURIComponent(msg)}`;
+  window.open(url,'_blank');
+}
+
+// ── ADMIN: PRODUCTS ───────────────────────────────────────────────────────────
+function renderAdminProds(){
+  const fw=document.getElementById('admin-filter'); fw.innerHTML='';
+  const allP=document.createElement('span'); allP.className='pill'+(adminCatFilter===null?' active':'');
+  allP.innerHTML=`<span class="dot" style="background:var(--accent)"></span> Semua`;
+  allP.onclick=()=>{adminCatFilter=null;renderAdminProds();};
+  fw.appendChild(allP);
+  Object.entries(db.cats).forEach(([name,c])=>{
+    const p=document.createElement('span'); p.className='pill'+(adminCatFilter===name?' active':'');
+    p.innerHTML=`<span class="dot" style="background:${c.bg};border:1px solid ${c.tc}44"></span> ${name}`;
+    p.onclick=()=>{adminCatFilter=name;renderAdminProds();};
+    fw.appendChild(p);
+  });
+  const list=document.getElementById('admin-prod-list'); list.innerHTML=''; let rendered=0;
+  Object.entries(db.prods).forEach(([cat,prods])=>{
+    if(adminCatFilter&&cat!==adminCatFilter) return;
+    const sec=document.createElement('div');
+    sec.innerHTML=`<div class="cat-section-label"><span>${cat}</span><span>${prods.length} produk</span></div>`;
+    prods.forEach(([name,won],idx)=>{
+      const rp=Math.round(won*db.settings.kurs);
+      const row=document.createElement('div'); row.className='admin-prod-row';
+      row.innerHTML=`<div class="admin-prod-info"><div class="admin-prod-name">${name}</div><div class="admin-prod-price">₩${fmtW(won)} · Rp ${fmt(rp)}</div></div>
+        <button class="icon-btn" onclick="openEditProd('${cat.replace(/'/g,"\\'")}',${idx})" style="margin-right:6px"><i class="ti ti-edit"></i></button>
+        <button class="icon-btn del" onclick="deleteProd('${cat.replace(/'/g,"\\'")}',${idx})"><i class="ti ti-trash"></i></button>`;
+      sec.appendChild(row); rendered++;
+    });
+    list.appendChild(sec);
+  });
+  if(!rendered) list.innerHTML='<div class="empty"><i class="ti ti-inbox"></i><p>Belum ada produk</p></div>';
+  const sel=document.getElementById('pf-cat');
+  if(sel){sel.innerHTML='';Object.keys(db.cats).forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});}
+}
+
+function openAddProd(){editProdKey=null;document.getElementById('prod-form-title').textContent='Tambah Produk';document.getElementById('pf-name').value='';document.getElementById('pf-won').value='';document.getElementById('prod-form-wrap').style.display='block';document.getElementById('pf-name').focus();}
+function openEditProd(cat,idx){editProdKey={cat,idx};const[name,won]=db.prods[cat][idx];document.getElementById('prod-form-title').textContent='Edit Produk';document.getElementById('pf-name').value=name;document.getElementById('pf-won').value=won;document.getElementById('pf-cat').value=cat;document.getElementById('prod-form-wrap').style.display='block';}
+function closeProdForm(){document.getElementById('prod-form-wrap').style.display='none';editProdKey=null;}
+
+function saveProd(){
+  const name=document.getElementById('pf-name').value.trim(), won=parseFloat(document.getElementById('pf-won').value), cat=document.getElementById('pf-cat').value;
+  if(!name||!won||won<=0){toast('Isi nama dan harga dengan benar');return;}
+  if(!db.prods[cat]) db.prods[cat]=[];
+  if(editProdKey){const{cat:oc,idx}=editProdKey;db.prods[oc].splice(idx,1);if(!db.prods[cat])db.prods[cat]=[];db.prods[cat].push([name,won]);}
+  else db.prods[cat].push([name,won]);
+  saveDB();closeProdForm();renderAdminProds();buildCatGrid();toast('Produk tersimpan!');
+}
+function deleteProd(cat,idx){if(!confirm('Hapus produk ini?'))return;db.prods[cat].splice(idx,1);saveDB();renderAdminProds();buildCatGrid();toast('Produk dihapus');}
+
+// ── ADMIN: CATEGORIES ─────────────────────────────────────────────────────────
+function renderAdminCats(){
+  const list=document.getElementById('admin-cat-list'); list.innerHTML='';
+  Object.entries(db.cats).forEach(([name,c])=>{
+    const count=(db.prods[name]||[]).length, card=document.createElement('div'); card.className='cat-card-admin';
+    const feeText = c.feeType==='percent' ? `${c.feeValue}% dari harga` : `Rp ${fmt(c.feeValue||0)} / item`;
+    card.innerHTML=`<div class="cat-icon-box" style="background:${c.bg}"><i class="ti ${c.icon}" style="color:${c.tc};font-size:20px"></i></div>
+      <div class="cat-admin-info"><div class="cat-admin-name">${name}</div><div class="cat-admin-count">${count} produk · biaya jasa ${feeText}</div></div>
+      <button class="icon-btn" onclick="openEditCat('${name.replace(/'/g,"\\'")}')"><i class="ti ti-edit"></i></button>
+      <button class="icon-btn del" onclick="deleteCat('${name.replace(/'/g,"\\'")}')"><i class="ti ti-trash"></i></button>`;
+    list.appendChild(card);
+  });
+}
+function onFeeTypeChange(){
+  const t=document.getElementById('cf-feetype').value;
+  const label=document.getElementById('cf-feevalue-label');
+  const input=document.getElementById('cf-feevalue');
+  if(t==='percent'){label.textContent='Nilai (%)';input.placeholder='8';}
+  else{label.textContent='Nilai (Rp)';input.placeholder='15000';}
+}
+function openAddCat(){editCatKey=null;document.getElementById('cat-form-title').textContent='Tambah Kategori';['cf-name','cf-bg','cf-tc','cf-icon'].forEach(id=>document.getElementById(id).value='');document.getElementById('cf-feetype').value='flat';document.getElementById('cf-feevalue').value=db.settings.jasa||15000;onFeeTypeChange();document.getElementById('cat-form-wrap').style.display='block';}
+function openEditCat(name){editCatKey=name;const c=db.cats[name];document.getElementById('cat-form-title').textContent='Edit Kategori';document.getElementById('cf-name').value=name;document.getElementById('cf-bg').value=c.bg;document.getElementById('cf-tc').value=c.tc;document.getElementById('cf-icon').value=c.icon;document.getElementById('cf-feetype').value=c.feeType||'flat';document.getElementById('cf-feevalue').value=(c.feeValue!=null?c.feeValue:(db.settings.jasa||15000));onFeeTypeChange();document.getElementById('cat-form-wrap').style.display='block';}
+function closeCatForm(){document.getElementById('cat-form-wrap').style.display='none';editCatKey=null;}
+
+function saveCat(){
+  const name=document.getElementById('cf-name').value.trim(), bg=document.getElementById('cf-bg').value.trim()||'#E8E8E8', tc=document.getElementById('cf-tc').value.trim()||'#333', icon=document.getElementById('cf-icon').value.trim()||'ti-tag';
+  const feeType=document.getElementById('cf-feetype').value, feeValue=parseFloat(document.getElementById('cf-feevalue').value)||0;
+  if(!name){toast('Isi nama kategori');return;}
+  if(editCatKey&&editCatKey!==name){db.cats[name]=db.cats[editCatKey];delete db.cats[editCatKey];if(db.prods[editCatKey]){db.prods[name]=db.prods[editCatKey];delete db.prods[editCatKey];}}
+  db.cats[name]={icon,bg,tc,feeType,feeValue};if(!db.prods[name])db.prods[name]=[];
+  saveDB();closeCatForm();renderAdminCats();renderAdminProds();buildCatGrid();toast('Kategori tersimpan!');
+}
+function deleteCat(name){const count=(db.prods[name]||[]).length;if(count>0&&!confirm(`Kategori "${name}" punya ${count} produk. Hapus semuanya?`))return;delete db.cats[name];delete db.prods[name];if(adminCatFilter===name)adminCatFilter=null;saveDB();renderAdminCats();renderAdminProds();buildCatGrid();toast('Kategori dihapus');}
+
+// ── ADMIN: SETTINGS ───────────────────────────────────────────────────────────
+function loadSettingsForm(){document.getElementById('set-kurs').value=db.settings.kurs;document.getElementById('set-jasa').value=db.settings.jasa;document.getElementById('set-maxqty').value=db.settings.maxqty;document.getElementById('set-admin-wa').value=db.settings.adminWa||'';
+  document.getElementById('set-banner').value=db.settings.bannerUrl||'';document.getElementById('set-biz').value=db.settings.businessName||'Dyhart Jastip';document.getElementById('set-hero').value=db.settings.heroTitle||'Simulasi Harga Belanja Korea 🇰🇷';document.getElementById('set-tagline').value=db.settings.tagline||'Pilih produk, lihat total — sebelum order ke admin.';}
+function saveSettings(){
+  const kurs=parseFloat(document.getElementById('set-kurs').value), jasa=parseInt(document.getElementById('set-jasa').value), maxqty=parseInt(document.getElementById('set-maxqty').value), adminWa=document.getElementById('set-admin-wa').value.trim();
+  if(!kurs||!jasa||!maxqty){toast('Isi semua pengaturan');return;}
+  const np=document.getElementById('set-pass')?.value.trim(); const bizName=document.getElementById('set-biz').value.trim()||'Dyhart Jastip'; const heroTitleVal=document.getElementById('set-hero').value.trim()||'Simulasi Harga Belanja Korea 🇰🇷'; const taglineVal=document.getElementById('set-tagline').value.trim()||''; const bannerUrl=document.getElementById('set-banner').value.trim(); db.settings={kurs,jasa,maxqty,adminWa,bannerUrl,adminPass:np||db.settings.adminPass||'Dy_7707',businessName:bizName,heroTitle:heroTitleVal,tagline:taglineVal}; if(document.getElementById('set-pass')) document.getElementById('set-pass').value=''; saveDB(); document.getElementById('kurs-disp').textContent=kurs.toLocaleString('id-ID',{minimumFractionDigits:2}); document.getElementById('hero-eyebrow').textContent=bizName; document.getElementById('hero-title').textContent=heroTitleVal; document.getElementById('hero-sub').textContent=taglineVal; renderAdminProds(); applyBanner(db.settings.bannerUrl||''); toast('Pengaturan tersimpan!');
+}
+function resetAll(){if(!confirm('Reset semua data ke default?'))return;db={cats:{...DEFAULT_CATS},prods:JSON.parse(JSON.stringify(DEFAULT_PRODS)),settings:{...DEFAULT_SETTINGS}};saveDB();initUI();toast('Data direset ke default');}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+
+function showAdminPage(){
+  if(sessionStorage.getItem('admin_ok')==='1'){showPage('admin');return;}
+  const m=document.getElementById('auth-modal');
+  m.style.display='flex';
+  document.getElementById('auth-input').value='';
+  document.getElementById('auth-error').style.display='none';
+  setTimeout(()=>document.getElementById('auth-input').focus(),120);
+}
+function checkAuth(){
+  const pass=document.getElementById('auth-input').value;
+  const stored=db.settings.adminPass||'Dy_7707';
+  if(pass===stored){
+    sessionStorage.setItem('admin_ok','1');
+    document.getElementById('auth-modal').style.display='none';
+    showPage('admin');
+  } else {
+    document.getElementById('auth-error').style.display='block';
+    document.getElementById('auth-input').value='';
+    document.getElementById('auth-input').focus();
+    document.getElementById('auth-modal').querySelector('div[style*="border-radius"]').style.animation='shake .3s';
+    setTimeout(()=>document.getElementById('auth-modal').querySelector('div[style*="border-radius"]').style.animation='',400);
+  }
+}
+function closeAuth(){document.getElementById('auth-modal').style.display='none';}
+function adminLogout(){sessionStorage.removeItem('admin_ok');showPage('customer');toast('Logged out');}
+
+function applyBanner(url){
+  const hero=document.getElementById('hero-section');
+  if(!hero) return;
+  if(url){
+    hero.style.backgroundImage='linear-gradient(rgba(0,0,0,.42),rgba(0,0,0,.32)),url('+url+')';
+    hero.style.backgroundSize='cover';
+    hero.style.backgroundPosition='center';
+    hero.style.backgroundRepeat='no-repeat';
+  } else {
+    hero.style.backgroundImage='';
+    hero.style.backgroundSize='';
+    hero.style.backgroundPosition='';
+  }
+}
+
+loadDB();
+</script>
+</body>
+</html>

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>By Dyhart — Pricelist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#F7F5F2;--surface:#fff;--surface2:#F0EDE8;--border:#E2DDD8;--border2:#CCC7C0;
+  --text:#1A1714;--text2:#6B6560;--text3:#A09A94;
+  --accent:#7C3AED;--accent-light:#F5F3FF;--accent-dark:#5B21B6;
+  --green:#1E7A52;--green-light:#EAF5EE;
+  --radius:14px;--radius-sm:8px;--font:'Plus Jakarta Sans',system-ui,sans-serif;
+  --shadow:0 1px 3px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.06);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{font-family:var(--font);font-size:14px;color:var(--text);background:var(--bg);min-height:100vh}
+.app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);display:flex;flex-direction:column}
+.top-nav{display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm)}
+.nav-btn{flex:1;padding:14px 8px 12px;border:none;background:transparent;font-family:var(--font);font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;border-bottom:2.5px solid transparent;transition:all .2s}
+.nav-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{display:none;flex:1}.page.active{display:block}
+.hero{background:var(--accent);padding:24px 20px 20px;color:#fff}
+.hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;opacity:.75;margin-bottom:6px}
+.hero-title{font-size:22px;font-weight:700;line-height:1.25;margin-bottom:4px}
+.hero-sub{font-size:13px;opacity:.8;line-height:1.5}
+.tab-wrap{background:var(--surface);border-bottom:1px solid var(--border);display:flex;position:sticky;top:49px;z-index:90}
+.tab{flex:1;padding:12px 4px 10px;border:none;background:transparent;font-family:var(--font);font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;border-bottom:2.5px solid transparent;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .2s}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.panel{display:none;padding:20px}.panel.active{display:block}
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px;box-shadow:var(--shadow-sm)}
+.field{margin-bottom:14px}
+.field-label{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;display:block}
+input[type=text],input[type=tel],input[type=number],select,textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font);font-size:14px;color:var(--text);background:var(--surface);outline:none;transition:border-color .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,58,237,.1)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cat-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.cat-pill{display:flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid var(--border);border-radius:20px;background:var(--surface);font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .15s;white-space:nowrap}
+.cat-pill:hover{border-color:var(--border2)}
+.cat-pill.sel{border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
+.pkg-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px;cursor:pointer;transition:all .18s;box-shadow:var(--shadow-sm)}
+.pkg-card:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.pkg-card.sel{border-color:var(--accent);background:var(--accent-light)}
+.pkg-name{font-size:15px;font-weight:700;margin-bottom:4px}
+.pkg-meta{display:flex;gap:12px;margin-bottom:8px}
+.pkg-meta-item{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text2)}
+.pkg-desc{font-size:13px;color:var(--text2);line-height:1.5;margin-bottom:10px}
+.pkg-price{font-size:18px;font-weight:700;color:var(--accent)}
+.pkg-price-sub{font-size:12px;color:var(--text3)}
+.addon-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+.addon-row:last-child{border-bottom:none}
+.addon-toggle{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s;font-size:14px;color:transparent}
+.addon-toggle.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.addon-name{flex:1;font-size:13px;font-weight:500}
+.addon-price{font-size:13px;color:var(--text2);font-weight:500;white-space:nowrap}
+.total-box{background:var(--accent);border-radius:var(--radius);padding:18px;text-align:center;margin:16px 0;box-shadow:0 4px 16px rgba(124,58,237,.25)}
+.total-label{font-size:12px;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.total-amount{font-size:28px;font-weight:700;color:#fff}
+.grand-box{background:var(--green);border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:12px;box-shadow:0 4px 16px rgba(30,122,82,.2)}
+.grand-label{font-size:12px;font-weight:600;color:rgba(255,255,255,.8);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.grand-amount{font-size:28px;font-weight:700;color:#fff}
+.btn-wa{width:100%;padding:13px;border:none;border-radius:var(--radius-sm);background:#25D366;font-family:var(--font);font-size:14px;font-weight:600;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .15s}
+.btn-wa:hover{background:#1da851}
+.btn-accent{width:100%;padding:12px;border:none;border-radius:var(--radius-sm);background:var(--accent);font-family:var(--font);font-size:14px;font-weight:600;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;margin-top:8px}
+.btn-accent:hover{background:var(--accent-dark)}
+.btn-sec{flex:1;padding:12px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);font-family:var(--font);font-size:14px;font-weight:500;color:var(--text);cursor:pointer;transition:all .15s}
+.btn-next{flex:2;padding:12px;border:none;border-radius:var(--radius-sm);background:var(--accent);font-family:var(--font);font-size:14px;font-weight:600;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s}
+.btn-next:hover{background:var(--accent-dark)}
+.nav-btns{display:flex;gap:10px;margin-top:14px}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.section-title{font-size:15px;font-weight:700}
+.btn-add{display:flex;align-items:center;gap:5px;padding:8px 14px;border:none;border-radius:var(--radius-sm);background:var(--accent);font-family:var(--font);font-size:13px;font-weight:600;color:#fff;cursor:pointer}
+.form-divider{border-top:1.5px solid var(--border);padding-top:16px;margin-top:8px}
+.form-title{font-size:15px;font-weight:700;margin-bottom:14px}
+.admin-prod-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)}
+.admin-prod-row:last-child{border-bottom:none}
+.admin-prod-info{flex:1;min-width:0}
+.admin-prod-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-prod-price{font-size:12px;color:var(--text2);margin-top:2px}
+.icon-btn{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--border2);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:var(--text2);font-size:14px;transition:all .15s}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+.icon-btn.del:hover{border-color:var(--accent);background:var(--accent);color:#fff}
+.cat-section-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);padding:10px 0 6px;border-bottom:1px solid var(--border);margin-bottom:8px;display:flex;justify-content:space-between}
+.filter-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;border:1.5px solid var(--border2);background:var(--surface);font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .15s}
+.pill.active{border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.gallery-item{border-radius:var(--radius-sm);overflow:hidden;aspect-ratio:1;background:var(--surface2);border:1.5px solid var(--border);position:relative;cursor:pointer}
+.gallery-item img{width:100%;height:100%;object-fit:cover;display:block}
+.gallery-item .gal-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent);padding:6px 8px;font-size:11px;color:#fff;font-weight:500}
+.gallery-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text3);font-size:12px;gap:4px}
+.gallery-url-item{display:flex;align-items:flex-start;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)}
+.gallery-url-item:last-child{border-bottom:none}
+.gallery-thumb{width:48px;height:48px;border-radius:var(--radius-sm);object-fit:cover;background:var(--surface2);flex-shrink:0;border:1px solid var(--border)}
+.settings-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow-sm)}
+.settings-row{margin-bottom:14px}
+.settings-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;display:block}
+.reset-section{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:14px}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;margin-bottom:3px}
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty i{font-size:36px;display:block;margin-bottom:8px;opacity:.35}
+.empty p{font-size:13px;line-height:1.6}
+.step-indicator{display:flex;justify-content:space-between;margin-bottom:16px}
+.step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:var(--surface2);color:var(--text3);border:1.5px solid var(--border);transition:all .3s}
+.step-dot.done{background:var(--green);color:#fff;border-color:var(--green)}
+.step-dot.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.step-line{flex:1;height:2px;background:var(--border);align-self:center;margin:0 4px;border-radius:1px;transition:all .3s}
+.step-line.done{background:var(--green)}
+.notice{font-size:12px;color:var(--text3);text-align:center;line-height:1.6;margin-top:4px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:10px 20px;border-radius:24px;font-size:13px;font-weight:500;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9999;white-space:nowrap;box-shadow:var(--shadow)}
+.toast.show{opacity:1}
+.home-link{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(255,255,255,.3);border-radius:20px;color:rgba(255,255,255,.85);font-size:12px;font-weight:500;text-decoration:none;margin-bottom:12px;cursor:pointer;background:transparent;font-family:var(--font);transition:all .15s}
+.home-link:hover{background:rgba(255,255,255,.15)}
+.sum-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px}
+.sum-row.total{border-top:1.5px solid var(--border);padding-top:10px;margin-top:4px;font-size:15px;font-weight:700}
+
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+</style>
+</head>
+<body>
+<div class="app">
+<div id="toast" class="toast"></div>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <button class="nav-btn active" id="nav-customer" onclick="showPage('customer')">
+    <i class="ti ti-camera"></i> Pricelist
+  </button>
+  <button class="nav-btn" id="nav-admin" onclick="showAdminPage()">
+    <i class="ti ti-settings"></i> Admin
+  </button>
+</nav>
+
+<!-- CUSTOMER PAGE -->
+<div class="page active" id="page-customer">
+  <div class="hero" id="hero-section">
+    <button class="home-link" onclick="window.location.href='index.html'"><i class="ti ti-arrow-left"></i> Kembali</button>
+    <div class="hero-eyebrow" id="hero-eyebrow">By Dyhart</div>
+    <div class="hero-title" id="hero-title">Portrait · Wedding · Product</div>
+    <div class="hero-sub" id="hero-sub">Foto profesional di Korea, harga transparan.</div>
+  </div>
+  <div class="tab-wrap">
+    <button class="tab active" id="ctab-paket" onclick="showCTab('paket')"><i class="ti ti-package"></i> Paket</button>
+    <button class="tab" id="ctab-kalkulator" onclick="showCTab('kalkulator')"><i class="ti ti-calculator"></i> Kalkulator</button>
+    <button class="tab" id="ctab-galeri" onclick="showCTab('galeri')"><i class="ti ti-photo"></i> Galeri</button>
+  </div>
+
+  <!-- PAKET -->
+  <div class="panel active" id="cpanel-paket">
+    <div class="cat-pills" id="pkg-cat-pills"></div>
+    <div id="pkg-list"></div>
+  </div>
+
+  <!-- KALKULATOR -->
+  <div class="panel" id="cpanel-kalkulator">
+    <div class="step-indicator" id="calc-steps">
+      <div class="step-dot active" id="sd0">1</div>
+      <div class="step-line" id="sl0"></div>
+      <div class="step-dot" id="sd1">2</div>
+      <div class="step-line" id="sl1"></div>
+      <div class="step-dot" id="sd2">3</div>
+    </div>
+
+    <!-- Calc step 0: pick category + package -->
+    <div id="cs0">
+      <div style="font-size:15px;font-weight:700;margin-bottom:14px">Pilih paket</div>
+      <div class="cat-pills" id="calc-cat-pills"></div>
+      <div id="calc-pkg-list"></div>
+    </div>
+
+    <!-- Calc step 1: add-ons -->
+    <div id="cs1" style="display:none">
+      <div style="font-size:15px;font-weight:700;margin-bottom:4px">Tambahan layanan</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:14px">Pilih add-on yang kamu inginkan (opsional)</div>
+      <div class="card" style="padding:8px 14px">
+        <div id="addon-list"></div>
+      </div>
+      <div class="nav-btns">
+        <button class="btn-sec" onclick="calcStep(0)"><i class="ti ti-arrow-left"></i></button>
+        <button class="btn-next" onclick="calcStep(2)">Lihat total <i class="ti ti-arrow-right"></i></button>
+      </div>
+    </div>
+
+    <!-- Calc step 2: total -->
+    <div id="cs2" style="display:none">
+      <div style="font-size:15px;font-weight:700;margin-bottom:14px">Estimasi harga</div>
+      <div class="card" style="margin-bottom:12px" id="calc-summary-card"></div>
+      <div class="grand-box">
+        <div class="grand-label">Total estimasi</div>
+        <div class="grand-amount" id="calc-grand">Rp 0</div>
+      </div>
+      <div class="field"><label class="field-label">Nama kamu</label><input type="text" id="calc-nama" placeholder="Masukkan namamu"></div>
+      <div class="field"><label class="field-label">Nomor WhatsApp</label><input type="tel" id="calc-wa" placeholder="+62 812..."></div>
+      <button class="btn-wa" onclick="calcSendWA()"><i class="ti ti-brand-whatsapp"></i> Kirim ke admin</button>
+      <p class="notice" style="margin-top:8px">* Estimasi harga. Admin akan konfirmasi ketersediaan jadwal.</p>
+      <div class="nav-btns" style="margin-top:12px">
+        <button class="btn-sec" onclick="calcStep(1)"><i class="ti ti-arrow-left"></i> Edit</button>
+        <button class="btn-next" onclick="resetCalc()"><i class="ti ti-refresh"></i> Hitung ulang</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALERI -->
+  <div class="panel" id="cpanel-galeri">
+    <div class="gallery-grid" id="gallery-grid"></div>
+    <div id="gallery-empty" style="display:none">
+      <div class="empty"><i class="ti ti-photo"></i><p>Galeri belum diisi.<br>Admin dapat menambahkan foto dari tab Admin → Galeri.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div class="page" id="page-admin">
+  <div style="background:var(--surface);border-bottom:1px solid var(--border);padding:20px 20px 0">
+    <div style="font-size:18px;font-weight:700;margin-bottom:4px">Panel Admin</div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:14px">Kelola paket, galeri, dan pengaturan.</div>
+    <div class="tab-wrap" style="position:static;margin:0 -20px">
+      <button class="tab active" id="atab-paket" onclick="showATab('paket')"><i class="ti ti-package"></i> Paket</button>
+      <button class="tab" id="atab-galeri" onclick="showATab('galeri')"><i class="ti ti-photo"></i> Galeri</button>
+      <button class="tab" id="atab-settings" onclick="showATab('settings')"><i class="ti ti-adjustments"></i> Pengaturan</button>
+    </div>
+  </div>
+
+  <!-- Admin: Paket -->
+  <div class="panel active" id="apanel-paket">
+    <div class="section-head">
+      <span class="section-title">Daftar Paket</span>
+      <button class="btn-add" onclick="openAddPkg()"><i class="ti ti-plus"></i> Tambah</button>
+    </div>
+    <div class="filter-pills" id="admin-filter"></div>
+    <div id="admin-pkg-list"></div>
+    <div id="pkg-form-wrap" style="display:none">
+      <div class="form-divider">
+        <div class="form-title" id="pkg-form-title">Tambah Paket</div>
+        <div class="field"><label class="field-label">Nama paket</label><input type="text" id="pf-name" placeholder="Solo Standard"></div>
+        <div class="grid2" style="gap:10px;margin-bottom:14px">
+          <div><label class="field-label">Kategori</label><select id="pf-cat"></select></div>
+          <div><label class="field-label">Harga (Rp)</label><input type="number" id="pf-price" placeholder="900000"></div>
+        </div>
+        <div class="grid2" style="gap:10px;margin-bottom:14px">
+          <div><label class="field-label">Durasi</label><input type="text" id="pf-dur" placeholder="1 jam"></div>
+          <div><label class="field-label">Jumlah foto</label><input type="number" id="pf-photos" placeholder="30"></div>
+        </div>
+        <div class="field"><label class="field-label">Deskripsi singkat</label><input type="text" id="pf-desc" placeholder="Cocok untuk foto casual & sosmed"></div>
+        <div class="nav-btns">
+          <button class="btn-sec" onclick="closePkgForm()">Batal</button>
+          <button class="btn-next" onclick="savePkg()"><i class="ti ti-check"></i> Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin: Galeri -->
+  <div class="panel" id="apanel-galeri">
+    <div class="section-head">
+      <span class="section-title">Galeri Foto</span>
+      <button class="btn-add" onclick="openAddPhoto()"><i class="ti ti-plus"></i> Tambah</button>
+    </div>
+    <div style="font-size:12px;color:var(--text2);background:var(--surface2);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:14px;line-height:1.6">
+      <i class="ti ti-info-circle" style="vertical-align:-2px;margin-right:4px"></i>
+      Gunakan link langsung foto (Google Drive: <code>drive.google.com/uc?id=ID</code>, Imgur, dll.)
+    </div>
+    <div id="admin-gallery-list"></div>
+    <div id="gal-form-wrap" style="display:none">
+      <div class="form-divider">
+        <div class="form-title" id="gal-form-title">Tambah Foto</div>
+        <div class="field"><label class="field-label">URL foto</label><input type="text" id="gf-url" placeholder="https://..."></div>
+        <div class="grid2" style="gap:10px;margin-bottom:14px">
+          <div><label class="field-label">Caption</label><input type="text" id="gf-caption" placeholder="Pre-wedding di Seoul"></div>
+          <div><label class="field-label">Kategori tag</label><input type="text" id="gf-cat" placeholder="Wedding"></div>
+        </div>
+        <div class="nav-btns">
+          <button class="btn-sec" onclick="closeGalForm()">Batal</button>
+          <button class="btn-next" onclick="savePhoto()"><i class="ti ti-check"></i> Simpan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin: Settings -->
+  <div class="panel" id="apanel-settings">
+    <div class="settings-card">
+      <div class="settings-row"><label class="settings-label">Nama layanan (eyebrow kecil)</label><input type="text" id="set-name" placeholder="By Dyhart"></div>
+      <div class="settings-row"><label class="settings-label">Judul halaman (headline besar)</label><input type="text" id="set-hero" placeholder="Portrait · Wedding · Product"></div>
+      <div class="settings-row"><label class="settings-label">Deskripsi singkat (sub judul)</label><input type="text" id="set-tagline" placeholder="Foto profesional di Korea"></div>
+      <div class="settings-row"><label class="settings-label">Nomor WA admin (tanpa +)</label><input type="text" id="set-wa" placeholder="628123456789"></div>
+      
+      <div class="settings-row"><label class="settings-label">URL Foto Banner</label><input type="text" id="set-banner" placeholder="https://... (kosongkan untuk warna solid)"><div style="font-size:11px;color:var(--text3);margin-top:5px;line-height:1.5">Ukuran ideal: 1200×400px. Gunakan link langsung (Google Drive, Imgur, dll.)</div></div>
+      <div class="settings-row"><label class="settings-label">Ganti password admin</label><input type="password" id="set-pass" placeholder="Kosongkan jika tidak diubah"></div>
+<button class="btn-accent" onclick="saveSettings()"><i class="ti ti-check"></i> Simpan pengaturan</button>
+    </div>
+    <div class="reset-section">
+      <div style="font-size:14px;font-weight:700;margin-bottom:6px">Add-on layanan</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px">Tambah/hapus add-on yang muncul di kalkulator.</div>
+      <div id="addon-admin-list" style="margin-bottom:12px"></div>
+      <button class="btn-add" style="width:100%;justify-content:center;border-radius:var(--radius-sm)" onclick="openAddAddon()"><i class="ti ti-plus"></i> Tambah add-on</button>
+      <div id="addon-form-wrap" style="display:none;margin-top:12px">
+        <div class="grid2" style="gap:10px;margin-bottom:10px">
+          <div><label class="field-label">Nama add-on</label><input type="text" id="af-name" placeholder="Extra 10 foto"></div>
+          <div><label class="field-label">Harga (Rp)</label><input type="number" id="af-price" placeholder="300000"></div>
+        </div>
+        <div class="nav-btns">
+          <button class="btn-sec" onclick="closeAddonForm()">Batal</button>
+          <button class="btn-next" onclick="saveAddon()"><i class="ti ti-check"></i> Simpan</button>
+        </div>
+      </div>
+    </div>
+    <div class="reset-section" style="margin-top:12px">
+      <div style="font-size:14px;font-weight:700;margin-bottom:6px">Reset data</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px">Kembalikan semua ke data default.</div>
+      <button       <button onclick="adminLogout()" style="width:100%;padding:11px;border:1.5px solid #FECACA;border-radius:var(--radius-sm);background:var(--surface);font-family:var(--font);font-size:14px;font-weight:500;color:#DC2626;cursor:pointer;margin-top:8px"><i class="ti ti-logout"></i> Logout admin</button>
+      <button style="width:100%;padding:11px;border:1.5px solid #EECDC8;border-radius:var(--radius-sm);background:var(--surface);font-family:var(--font);font-size:14px;font-weight:500;color:var(--accent);cursor:pointer" onclick="resetAll()"><i class="ti ti-refresh"></i> Reset ke default</button>
+    </div>
+  </div>
+</div><!-- /admin page -->
+
+
+  <!-- AUTH MODAL -->
+  <div id="auth-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(3px)">
+    <div style="background:var(--surface);border-radius:var(--radius);padding:28px 24px;width:88%;max-width:340px;box-shadow:var(--shadow)">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="width:56px;height:56px;border-radius:50%;background:var(--accent-light);display:flex;align-items:center;justify-content:center;margin:0 auto 12px">
+          <i class="ti ti-lock" style="font-size:26px;color:var(--accent)"></i>
+        </div>
+        <div style="font-size:17px;font-weight:700;margin-bottom:4px">Admin Access</div>
+        <div style="font-size:13px;color:var(--text2)">Masukkan password untuk lanjut</div>
+      </div>
+      <input type="password" id="auth-input" placeholder="Password" style="margin-bottom:10px;text-align:center;font-size:18px;letter-spacing:.15em" onkeydown="if(event.key==='Enter')checkAuth()">
+      <div id="auth-error" style="display:none;font-size:12px;color:#DC2626;text-align:center;margin-bottom:10px;font-weight:500">Password salah. Coba lagi.</div>
+      <button onclick="checkAuth()" style="width:100%;padding:12px;border:none;border-radius:var(--radius-sm);background:var(--accent);font-family:var(--font);font-size:14px;font-weight:600;color:#fff;cursor:pointer;margin-bottom:8px">Masuk</button>
+      <button onclick="closeAuth()" style="width:100%;padding:12px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);font-family:var(--font);font-size:14px;font-weight:500;color:var(--text);cursor:pointer">Batal</button>
+    </div>
+  </div>
+</div><!-- /app -->
+
+<script>
+const DEFAULT_CATS = {
+  "📸 Portrait": {icon:"ti-user-circle", bg:"#F5F3FF", tc:"#5B21B6"},
+  "💒 Wedding":  {icon:"ti-heart",       bg:"#FFF1F2", tc:"#9F1239"},
+  "📦 Product":  {icon:"ti-box",         bg:"#F0FDF4", tc:"#166534"},
+};
+const DEFAULT_PKGS = {
+  "📸 Portrait":[
+    {name:"Solo Casual",   dur:"30 menit", photos:15, desc:"Outfit casual, lokasi bebas. Cocok untuk konten sosmed.", price:500000},
+    {name:"Solo Standard", dur:"1 jam",    photos:30, desc:"Pilihan terbaik untuk foto profesional personal.",        price:900000},
+    {name:"Solo Premium",  dur:"2 jam",    photos:60, desc:"Sesi panjang, beragam outfit & lokasi.",                 price:1500000},
+    {name:"Couple",        dur:"1 jam",    photos:30, desc:"Foto berdua, cocok untuk pasangan maupun sahabat.",       price:1000000},
+    {name:"Family",        dur:"1.5 jam",  photos:40, desc:"Hingga 4 orang. Lokasi indoor/outdoor.",                 price:1300000},
+  ],
+  "💒 Wedding":[
+    {name:"Engagement",         dur:"2 jam",  photos:40,  desc:"Sesi lamaran & pertunangan. Momen intim & natural.",   price:1800000},
+    {name:"Pre-wedding Indoor",  dur:"3 jam",  photos:60,  desc:"Studio atau lokasi indoor pilihan di Korea.",          price:2500000},
+    {name:"Pre-wedding Full Day",dur:"6 jam",  photos:100, desc:"Full day 2 lokasi, termasuk konsultasi outfit.",       price:4000000},
+    {name:"Wedding Day",         dur:"10 jam", photos:150, desc:"Dokumentasi hari H dari persiapan hingga resepsi.",   price:7000000},
+  ],
+  "📦 Product":[
+    {name:"Single Item",    dur:"1 jam",   photos:20,  desc:"1 produk, 5 angle. Cocok untuk marketplace.",         price:800000},
+    {name:"Product Catalog",dur:"3 jam",   photos:60,  desc:"Hingga 10 produk berbeda. Background clean.",         price:2000000},
+    {name:"Lifestyle Brand",dur:"Full day",photos:100, desc:"Konsep brand penuh — model, props, lokasi.",          price:4500000},
+  ],
+};
+const DEFAULT_ADDONS = [
+  {name:"Extra 10 foto edited",      price:300000},
+  {name:"Rush delivery 24 jam",      price:500000},
+  {name:"Cetak 4R (20 lembar)",      price:250000},
+  {name:"Photobook soft cover",      price:1200000},
+  {name:"Extra lokasi",              price:400000},
+  {name:"Makeup artist",             price:500000},
+];
+const DEFAULT_SETTINGS = {businessName:"By Dyhart", heroTitle:"Portrait · Wedding · Product", tagline:"Foto profesional di Korea, harga transparan.", adminWa:"", adminPass:"Dy_7707", bannerUrl:""};
+
+let db = {cats:{}, pkgs:{}, addons:[], gallery:[], settings:{...DEFAULT_SETTINGS}};
+let selCatPkg=null, selCatCalc=null, selPkgIdx=null, calcStep_=0, selAddons=new Set();
+let adminCatFilter=null, editPkgKey=null, editGalIdx=null;
+
+function loadDB(){
+  try{
+    const r=localStorage.getItem('foto_db');
+    if(r){db=JSON.parse(r);}
+    else{db={cats:{...DEFAULT_CATS},pkgs:JSON.parse(JSON.stringify(DEFAULT_PKGS)),addons:JSON.parse(JSON.stringify(DEFAULT_ADDONS)),gallery:[],settings:{...DEFAULT_SETTINGS}};saveDB();}
+  }catch(e){db={cats:{...DEFAULT_CATS},pkgs:JSON.parse(JSON.stringify(DEFAULT_PKGS)),addons:JSON.parse(JSON.stringify(DEFAULT_ADDONS)),gallery:[],settings:{...DEFAULT_SETTINGS}};}
+  initUI();
+}
+function saveDB(){try{localStorage.setItem('foto_db',JSON.stringify(db));}catch(e){}}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+function fmt(n){return Math.round(n).toLocaleString('id-ID')}
+
+function initUI(){
+  document.getElementById('hero-eyebrow').textContent=db.settings.businessName||'By Dyhart';
+  document.getElementById('hero-title').textContent=db.settings.heroTitle||'Portrait · Wedding · Product';
+  document.getElementById('hero-sub').textContent=db.settings.tagline||'';
+  buildCatPills(); renderPkgList(); buildCalcCatPills(); renderGallery();
+  renderAdminPkgs(); renderAdminGallery(); loadSettingsForm(); renderAddonAdmin(); applyBanner(db.settings.bannerUrl||'');
+}
+
+function showPage(p){
+  document.getElementById('page-customer').classList.toggle('active',p==='customer');
+  document.getElementById('page-admin').classList.toggle('active',p==='admin');
+  const nc=document.getElementById('nav-customer'),na=document.getElementById('nav-admin');
+  nc.classList.toggle('active',p==='customer'); na.classList.toggle('active',p==='admin');
+}
+
+function showCTab(t){
+  ['paket','kalkulator','galeri'].forEach(id=>{
+    document.getElementById('cpanel-'+id).classList.toggle('active',id===t);
+    document.getElementById('ctab-'+id).classList.toggle('active',id===t);
+  });
+  if(t==='galeri') renderGallery();
+}
+
+function showATab(t){
+  ['paket','galeri','settings'].forEach(id=>{
+    document.getElementById('apanel-'+id).classList.toggle('active',id===t);
+    document.getElementById('atab-'+id).classList.toggle('active',id===t);
+  });
+}
+
+// PACKAGE LIST
+function buildCatPills(){
+  const g=document.getElementById('pkg-cat-pills'); if(!g) return;
+  g.innerHTML='';
+  Object.entries(db.cats).forEach(([name,c])=>{
+    if(!(db.pkgs[name]||[]).length) return;
+    const b=document.createElement('button');
+    b.className='cat-pill'+(selCatPkg===name?' sel':'');
+    b.innerHTML=`<i class="ti ${c.icon}" style="font-size:15px"></i>${name}`;
+    b.onclick=()=>{selCatPkg=name;buildCatPills();renderPkgList();};
+    g.appendChild(b);
+  });
+  if(!selCatPkg) selCatPkg=Object.keys(db.cats)[0]||null;
+}
+
+function renderPkgList(){
+  const div=document.getElementById('pkg-list'); div.innerHTML='';
+  if(!selCatPkg) return;
+  const pkgs=db.pkgs[selCatPkg]||[];
+  const {bg,tc}=db.cats[selCatPkg]||{bg:'#eee',tc:'#333'};
+  if(!pkgs.length){div.innerHTML='<div class="empty"><i class="ti ti-package"></i><p>Belum ada paket</p></div>';return;}
+  pkgs.forEach(p=>{
+    const card=document.createElement('div'); card.className='pkg-card';
+    card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+      <span class="badge" style="background:${bg};color:${tc}">${selCatPkg}</span></div>
+      <div class="pkg-name">${p.name}</div>
+      <div class="pkg-meta">
+        <span class="pkg-meta-item"><i class="ti ti-clock" style="font-size:13px"></i>${p.dur}</span>
+        <span class="pkg-meta-item"><i class="ti ti-photo" style="font-size:13px"></i>${p.photos} foto</span>
+      </div>
+      <div class="pkg-desc">${p.desc}</div>
+      <div style="display:flex;align-items:baseline;gap:6px">
+        <div class="pkg-price">Rp ${fmt(p.price)}</div>
+      </div>`;
+    div.appendChild(card);
+  });
+}
+
+// CALCULATOR
+function buildCalcCatPills(){
+  const g=document.getElementById('calc-cat-pills'); if(!g) return;
+  g.innerHTML='';
+  Object.entries(db.cats).forEach(([name,c])=>{
+    if(!(db.pkgs[name]||[]).length) return;
+    const b=document.createElement('button');
+    b.className='cat-pill'+(selCatCalc===name?' sel':'');
+    b.innerHTML=`<i class="ti ${c.icon}" style="font-size:15px"></i>${name}`;
+    b.onclick=()=>{selCatCalc=name;selPkgIdx=null;buildCalcCatPills();renderCalcPkgs();};
+    g.appendChild(b);
+  });
+}
+
+function renderCalcPkgs(){
+  const div=document.getElementById('calc-pkg-list'); div.innerHTML='';
+  if(!selCatCalc) return;
+  const pkgs=db.pkgs[selCatCalc]||[];
+  const {bg,tc}=db.cats[selCatCalc]||{bg:'#eee',tc:'#333'};
+  pkgs.forEach((p,idx)=>{
+    const card=document.createElement('div');
+    card.className='pkg-card'+(selPkgIdx===idx?' sel':'');
+    card.innerHTML=`<div class="pkg-name">${p.name}</div>
+      <div class="pkg-meta">
+        <span class="pkg-meta-item"><i class="ti ti-clock" style="font-size:13px"></i>${p.dur}</span>
+        <span class="pkg-meta-item"><i class="ti ti-photo" style="font-size:13px"></i>${p.photos} foto</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div class="pkg-price">Rp ${fmt(p.price)}</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:13px;color:var(--accent);font-weight:600">
+          ${selPkgIdx===idx?'<i class="ti ti-check"></i> Dipilih':'Pilih'}
+        </div>
+      </div>`;
+    card.onclick=()=>{
+      selPkgIdx=idx; renderCalcPkgs();
+      setTimeout(()=>{
+        if(selCatCalc&&selPkgIdx!==null){
+          renderAddonList(); calcStep(1);
+        }
+      },200);
+    };
+    div.appendChild(card);
+  });
+}
+
+function renderAddonList(){
+  const div=document.getElementById('addon-list'); div.innerHTML='';
+  db.addons.forEach((a,i)=>{
+    const row=document.createElement('div'); row.className='addon-row';
+    const on=selAddons.has(i);
+    row.innerHTML=`<div class="addon-toggle${on?' on':''}" onclick="toggleAddon(${i})" id="at-${i}">
+      <i class="ti ti-check" style="font-size:12px"></i></div>
+      <div class="addon-name">${a.name}</div>
+      <div class="addon-price">+ Rp ${fmt(a.price)}</div>`;
+    div.appendChild(row);
+  });
+}
+
+function toggleAddon(i){
+  if(selAddons.has(i)) selAddons.delete(i); else selAddons.add(i);
+  renderAddonList();
+}
+
+function calcStep(n){
+  calcStep_=n;
+  [0,1,2].forEach(i=>{
+    document.getElementById('cs'+i).style.display=i===n?'block':'none';
+    const sd=document.getElementById('sd'+i);
+    sd.className='step-dot'+(i<n?' done':i===n?' active':'');
+    if(i<2){const sl=document.getElementById('sl'+i);sl.className='step-line'+(i<n?' done':'');}
+  });
+  if(n===2) renderCalcTotal();
+}
+
+function renderCalcTotal(){
+  if(selCatCalc===null||selPkgIdx===null) return;
+  const pkg=db.pkgs[selCatCalc][selPkgIdx];
+  const {bg,tc}=db.cats[selCatCalc]||{bg:'#eee',tc:'#333'};
+  let total=pkg.price;
+  let addonHtml='';
+  selAddons.forEach(i=>{
+    const a=db.addons[i]; total+=a.price;
+    addonHtml+=`<div class="sum-row"><span style="color:var(--text2)">+ ${a.name}</span><span>Rp ${fmt(a.price)}</span></div>`;
+  });
+  document.getElementById('calc-summary-card').innerHTML=`
+    <span class="badge" style="background:${bg};color:${tc};margin-bottom:8px">${selCatCalc}</span>
+    <div style="font-size:15px;font-weight:700;margin-bottom:4px">${pkg.name}</div>
+    <div style="display:flex;gap:12px;font-size:12px;color:var(--text2);margin-bottom:12px">
+      <span><i class="ti ti-clock" style="vertical-align:-2px"></i> ${pkg.dur}</span>
+      <span><i class="ti ti-photo" style="vertical-align:-2px"></i> ${pkg.photos} foto</span>
+    </div>
+    <div class="sum-row"><span>Paket ${pkg.name}</span><span>Rp ${fmt(pkg.price)}</span></div>
+    ${addonHtml}
+    <div class="sum-row total"><span>Total estimasi</span><span style="color:var(--accent)">Rp ${fmt(total)}</span></div>`;
+  document.getElementById('calc-grand').textContent='Rp '+fmt(total);
+}
+
+function calcSendWA(){
+  if(!selCatCalc||selPkgIdx===null) return;
+  const pkg=db.pkgs[selCatCalc][selPkgIdx];
+  const nama=document.getElementById('calc-nama').value||'—';
+  const wa=document.getElementById('calc-wa').value||'';
+  let total=pkg.price, addonsText='';
+  selAddons.forEach(i=>{const a=db.addons[i];total+=a.price;addonsText+=`\n  + ${a.name}: Rp ${fmt(a.price)}`;});
+  const biz=db.settings.businessName||'By Dyhart';
+  let msg=`Halo ${biz}! 📸\n\n*Nama:* ${nama}\n*WA:* ${wa}\n\n*Paket yang diminati:*\n${selCatCalc} — ${pkg.name}\n  Durasi: ${pkg.dur}\n  Foto: ${pkg.photos} edited${addonsText}\n\n*Total Estimasi: Rp ${fmt(total)}*\n\nMohon info ketersediaan jadwal. Terima kasih!`;
+  const num=db.settings.adminWa||'';
+  const url=num?`https://wa.me/${num}?text=${encodeURIComponent(msg)}`:`https://wa.me/?text=${encodeURIComponent(msg)}`;
+  window.open(url,'_blank');
+}
+
+function resetCalc(){selCatCalc=null;selPkgIdx=null;selAddons=new Set();buildCalcCatPills();document.getElementById('calc-pkg-list').innerHTML='';calcStep(0);}
+
+// GALLERY
+function renderGallery(){
+  const grid=document.getElementById('gallery-grid');
+  const empty=document.getElementById('gallery-empty');
+  if(!db.gallery||!db.gallery.length){grid.innerHTML='';grid.style.display='none';empty.style.display='block';return;}
+  grid.style.display='grid';empty.style.display='none';grid.innerHTML='';
+  db.gallery.forEach((photo,i)=>{
+    const item=document.createElement('div'); item.className='gallery-item';
+    item.innerHTML=`<img src="${photo.url}" alt="${photo.caption||''}" onerror="this.parentElement.innerHTML='<div class=gallery-placeholder><i class=ti-photo style=font-size:24px></i><span>Foto tidak tersedia</span></div>'">
+      ${photo.caption?`<div class="gal-caption">${photo.caption}</div>`:''}`;
+    grid.appendChild(item);
+  });
+}
+
+// ADMIN: PACKAGES
+function renderAdminPkgs(){
+  const fw=document.getElementById('admin-filter'); fw.innerHTML='';
+  const allP=document.createElement('span'); allP.className='pill'+(adminCatFilter===null?' active':'');
+  allP.innerHTML=`<span class="dot" style="background:var(--accent)"></span> Semua`;
+  allP.onclick=()=>{adminCatFilter=null;renderAdminPkgs();}; fw.appendChild(allP);
+  Object.entries(db.cats).forEach(([name,c])=>{
+    const p=document.createElement('span'); p.className='pill'+(adminCatFilter===name?' active':'');
+    p.innerHTML=`<span class="dot" style="background:${c.bg};border:1px solid ${c.tc}44"></span> ${name}`;
+    p.onclick=()=>{adminCatFilter=name;renderAdminPkgs();}; fw.appendChild(p);
+  });
+  const list=document.getElementById('admin-pkg-list'); list.innerHTML=''; let rendered=0;
+  Object.entries(db.pkgs).forEach(([cat,pkgs])=>{
+    if(adminCatFilter&&cat!==adminCatFilter) return;
+    const sec=document.createElement('div');
+    sec.innerHTML=`<div class="cat-section-label"><span>${cat}</span><span>${pkgs.length} paket</span></div>`;
+    pkgs.forEach((p,idx)=>{
+      const row=document.createElement('div'); row.className='admin-prod-row';
+      row.innerHTML=`<div class="admin-prod-info"><div class="admin-prod-name">${p.name} <span style="font-size:11px;color:var(--text3)">${p.dur} · ${p.photos} foto</span></div>
+        <div class="admin-prod-price">Rp ${fmt(p.price)}</div></div>
+        <button class="icon-btn" onclick="openEditPkg('${cat.replace(/'/g,"\\'")}',${idx})" style="margin-right:6px"><i class="ti ti-edit"></i></button>
+        <button class="icon-btn del" onclick="deletePkg('${cat.replace(/'/g,"\\'")}',${idx})"><i class="ti ti-trash"></i></button>`;
+      sec.appendChild(row); rendered++;
+    });
+    list.appendChild(sec);
+  });
+  if(!rendered) list.innerHTML='<div class="empty"><i class="ti ti-package"></i><p>Belum ada paket</p></div>';
+  const sel=document.getElementById('pf-cat');
+  if(sel){sel.innerHTML='';Object.keys(db.cats).forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});}
+}
+
+function openAddPkg(){editPkgKey=null;document.getElementById('pkg-form-title').textContent='Tambah Paket';['pf-name','pf-dur','pf-desc'].forEach(id=>document.getElementById(id).value='');document.getElementById('pf-price').value='';document.getElementById('pf-photos').value='';document.getElementById('pkg-form-wrap').style.display='block';}
+function openEditPkg(cat,idx){
+  editPkgKey={cat,idx}; const p=db.pkgs[cat][idx];
+  document.getElementById('pkg-form-title').textContent='Edit Paket';
+  document.getElementById('pf-name').value=p.name; document.getElementById('pf-price').value=p.price;
+  document.getElementById('pf-dur').value=p.dur; document.getElementById('pf-photos').value=p.photos;
+  document.getElementById('pf-desc').value=p.desc; document.getElementById('pf-cat').value=cat;
+  document.getElementById('pkg-form-wrap').style.display='block';
+}
+function closePkgForm(){document.getElementById('pkg-form-wrap').style.display='none';editPkgKey=null;}
+function savePkg(){
+  const name=document.getElementById('pf-name').value.trim(), price=parseFloat(document.getElementById('pf-price').value);
+  const cat=document.getElementById('pf-cat').value, dur=document.getElementById('pf-dur').value.trim();
+  const photos=parseInt(document.getElementById('pf-photos').value), desc=document.getElementById('pf-desc').value.trim();
+  if(!name||!price||!dur||!photos){toast('Isi semua field');return;}
+  if(!db.pkgs[cat]) db.pkgs[cat]=[];
+  if(editPkgKey){const{cat:oc,idx}=editPkgKey;db.pkgs[oc].splice(idx,1);}
+  db.pkgs[cat].push({name,dur,photos,desc,price});
+  saveDB();closePkgForm();renderAdminPkgs();buildCatPills();renderPkgList();buildCalcCatPills();toast('Paket tersimpan!');
+}
+function deletePkg(cat,idx){if(!confirm('Hapus paket ini?'))return;db.pkgs[cat].splice(idx,1);saveDB();renderAdminPkgs();buildCatPills();renderPkgList();buildCalcCatPills();toast('Paket dihapus');}
+
+// ADMIN: GALLERY
+function renderAdminGallery(){
+  const list=document.getElementById('admin-gallery-list'); list.innerHTML='';
+  if(!db.gallery||!db.gallery.length){list.innerHTML='<div class="empty"><i class="ti ti-photo"></i><p>Belum ada foto</p></div>';return;}
+  db.gallery.forEach((photo,i)=>{
+    const row=document.createElement('div'); row.className='gallery-url-item';
+    row.innerHTML=`<img class="gallery-thumb" src="${photo.url}" alt="" onerror="this.style.background='var(--surface2)'">
+      <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${photo.caption||'(tanpa caption)'}</div>
+        <div style="font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${photo.url}</div>
+        ${photo.cat?`<span class="badge" style="background:var(--accent-light);color:var(--accent);margin-top:4px">${photo.cat}</span>`:''}</div>
+      <button class="icon-btn del" onclick="deletePhoto(${i})"><i class="ti ti-trash"></i></button>`;
+    list.appendChild(row);
+  });
+}
+function openAddPhoto(){document.getElementById('gal-form-title').textContent='Tambah Foto';['gf-url','gf-caption','gf-cat'].forEach(id=>document.getElementById(id).value='');document.getElementById('gal-form-wrap').style.display='block';}
+function closeGalForm(){document.getElementById('gal-form-wrap').style.display='none';}
+function savePhoto(){
+  const url=document.getElementById('gf-url').value.trim();
+  if(!url){toast('Masukkan URL foto');return;}
+  if(!db.gallery) db.gallery=[];
+  db.gallery.push({url,caption:document.getElementById('gf-caption').value.trim(),cat:document.getElementById('gf-cat').value.trim()});
+  saveDB();closeGalForm();renderAdminGallery();renderGallery();toast('Foto ditambahkan!');
+}
+function deletePhoto(i){if(!confirm('Hapus foto ini?'))return;db.gallery.splice(i,1);saveDB();renderAdminGallery();renderGallery();toast('Foto dihapus');}
+
+// ADMIN: ADD-ONS
+function renderAddonAdmin(){
+  const list=document.getElementById('addon-admin-list'); if(!list) return;
+  list.innerHTML='';
+  (db.addons||[]).forEach((a,i)=>{
+    const row=document.createElement('div'); row.className='admin-prod-row';
+    row.innerHTML=`<div class="admin-prod-info"><div class="admin-prod-name">${a.name}</div><div class="admin-prod-price">Rp ${fmt(a.price)}</div></div>
+      <button class="icon-btn del" onclick="deleteAddon(${i})"><i class="ti ti-trash"></i></button>`;
+    list.appendChild(row);
+  });
+}
+function openAddAddon(){document.getElementById('addon-form-wrap').style.display='block';}
+function closeAddonForm(){document.getElementById('addon-form-wrap').style.display='none';}
+function saveAddon(){
+  const name=document.getElementById('af-name').value.trim(), price=parseFloat(document.getElementById('af-price').value);
+  if(!name||!price){toast('Isi nama dan harga');return;}
+  if(!db.addons) db.addons=[];
+  db.addons.push({name,price});
+  saveDB();closeAddonForm();renderAddonAdmin();toast('Add-on ditambahkan!');
+}
+function deleteAddon(i){db.addons.splice(i,1);saveDB();renderAddonAdmin();toast('Add-on dihapus');}
+
+// SETTINGS
+function loadSettingsForm(){
+  document.getElementById('set-name').value=db.settings.businessName||'';
+  document.getElementById('set-hero').value=db.settings.heroTitle||'Portrait · Wedding · Product';
+  document.getElementById('set-tagline').value=db.settings.tagline||'';
+  document.getElementById('set-wa').value=db.settings.adminWa||'';
+  document.getElementById('set-banner').value=db.settings.bannerUrl||'';
+}
+function saveSettings(){
+  db.settings.businessName=document.getElementById('set-name').value.trim()||'By Dyhart';
+  db.settings.heroTitle=document.getElementById('set-hero').value.trim()||'Portrait · Wedding · Product';
+  db.settings.tagline=document.getElementById('set-tagline').value.trim();
+  db.settings.adminWa=document.getElementById('set-wa').value.trim();
+  db.settings.bannerUrl=document.getElementById('set-banner').value.trim();
+  const np=document.getElementById('set-pass')?.value.trim();if(np) db.settings.adminPass=np;
+  if(document.getElementById('set-pass')) document.getElementById('set-pass').value='';
+  saveDB();
+  document.getElementById('hero-eyebrow').textContent=db.settings.businessName;
+  document.getElementById('hero-title').textContent=db.settings.heroTitle;
+  document.getElementById('hero-sub').textContent=db.settings.tagline;
+  applyBanner(db.settings.bannerUrl||''); toast('Pengaturan tersimpan!');
+}
+function resetAll(){
+  if(!confirm('Reset semua data ke default?')) return;
+  db={cats:{...DEFAULT_CATS},pkgs:JSON.parse(JSON.stringify(DEFAULT_PKGS)),addons:JSON.parse(JSON.stringify(DEFAULT_ADDONS)),gallery:[],settings:{...DEFAULT_SETTINGS}};
+  saveDB();initUI();toast('Data direset ke default');
+}
+
+
+function showAdminPage(){
+  if(sessionStorage.getItem('admin_ok')==='1'){showPage('admin');return;}
+  const m=document.getElementById('auth-modal');
+  m.style.display='flex';
+  document.getElementById('auth-input').value='';
+  document.getElementById('auth-error').style.display='none';
+  setTimeout(()=>document.getElementById('auth-input').focus(),120);
+}
+function checkAuth(){
+  const pass=document.getElementById('auth-input').value;
+  const stored=db.settings.adminPass||'Dy_7707';
+  if(pass===stored){
+    sessionStorage.setItem('admin_ok','1');
+    document.getElementById('auth-modal').style.display='none';
+    showPage('admin');
+  } else {
+    document.getElementById('auth-error').style.display='block';
+    document.getElementById('auth-input').value='';
+    document.getElementById('auth-input').focus();
+    document.getElementById('auth-modal').querySelector('div[style*="border-radius"]').style.animation='shake .3s';
+    setTimeout(()=>document.getElementById('auth-modal').querySelector('div[style*="border-radius"]').style.animation='',400);
+  }
+}
+function closeAuth(){document.getElementById('auth-modal').style.display='none';}
+function adminLogout(){sessionStorage.removeItem('admin_ok');showPage('customer');toast('Logged out');}
+
+function applyBanner(url){
+  const hero=document.getElementById('hero-section');
+  if(!hero) return;
+  if(url){
+    hero.style.backgroundImage='linear-gradient(rgba(0,0,0,.42),rgba(0,0,0,.32)),url('+url+')';
+    hero.style.backgroundSize='cover';
+    hero.style.backgroundPosition='center';
+    hero.style.backgroundRepeat='no-repeat';
+  } else {
+    hero.style.backgroundImage='';
+    hero.style.backgroundSize='';
+    hero.style.backgroundPosition='';
+  }
+}
+
+loadDB();
+</script>
+</body>
+</html>
